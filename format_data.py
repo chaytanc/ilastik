@@ -9,12 +9,9 @@ col_headers = ["Treatment", "Well", "Day", "Area", "Diameter", "Mean Intensity"]
 
 
 def format_data(df):
-    #XXX make new headers + add to final df
-    #df.columns = 
     # get cystanoid prediction rows
     print("out.csv df: ", df)
     cystanoid_rows = df.loc[df["Predicted Class"] == "cystanoid"].reset_index()
-    #XXX does this filename col access alter underlying cystanoid rows? super weird
     filename_df = cystanoid_rows.loc[:,"filename"]
     #print("filename_df : ", filename_df)
     with_file_cols_df = _parse_filenames(filename_df)
@@ -106,30 +103,19 @@ def _get_unique_wells(improved_df):
         row["Day"] = pd.to_numeric(row["Day"])
         row = row.sort_values("Day")
         well_df_dict[well] = row
-#        if well in well_df_dict.keys(): 
-#            new_well_df_dict[well].append(row)
-#        else:
-#            well_df_dict[well] = [row]
     return well_df_dict
 
 # writes full csv to out.csv, merging all the data from each well into one df
 def get_full_csv(well_df_dict):
-    
+    # Concatenates all the individual dataframes representing each well's data
     big_df = pd.concat(list(well_df_dict.values()))
     print("final df: ", big_df)
-#    big_df = pd.DataFrame()
-#    for df in well_df_dict.values():
-#        print("final well df: ", df)
-#        big_df = pd.concat([big_df, df)
     # write to csv
     big_df.to_csv("modified_out.csv")
 
 if __name__ == "__main__":
     print("args: ", str(sys.argv))
     csv_file = sys.argv[1]
-    #XXX not sure we want this rn, may want to construct a diff df
-    # w desired headers rather than altering original
-    #df = pd.read_csv(csv_file, headers=None)
     df = pd.read_csv(csv_file)
     format_data(df)
 
