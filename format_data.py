@@ -14,18 +14,15 @@ def format_data(df):
     # get cystanoid prediction rows
     print("out.csv df: ", df)
     cystanoid_rows = df.loc[df["Predicted Class"] == "cystanoid"].reset_index()
-    print("cystanoid rows: ", cystanoid_rows)
     #XXX does this filename col access alter underlying cystanoid rows? super weird
     filename_df = cystanoid_rows.loc[:,"filename"]
-    print("cystanoid rows 2: ", cystanoid_rows)
-    print("filename_df : ", filename_df)
+    #print("filename_df : ", filename_df)
     with_file_cols_df = _parse_filenames(filename_df)
-    print("with file info df: ", with_file_cols_df)
+    #print("with file info df: ", with_file_cols_df)
     improved_df = add_relevant_info(with_file_cols_df, cystanoid_rows)
-    print("improved df: ", improved_df)
+    #print("improved df: ", improved_df)
     well_dfs = _get_unique_wells(improved_df)
     #well_dfs = get_well_dfs(improved_df)
-    #XXX wil this be the correct order of the labels?
     get_full_csv(well_dfs)
 
 
@@ -65,7 +62,7 @@ def _parse_filenames(filename_df):
 def add_relevant_info(in_prog_df, initial_df):
     print("initial df: ", initial_df)
     areas = initial_df.loc[:,'Size in pixels']
-    print("Areas: ", areas)
+    #print("Areas: ", areas)
     diameters = initial_df.loc[:,'Diameter']
     intensities = initial_df.loc[:,'Mean Intensity_0']
     # copy the initial_df so we can add some stuff to it
@@ -103,10 +100,11 @@ def add_relevant_info(in_prog_df, initial_df):
 def _get_unique_wells(improved_df):
     
     well_df_dict = {}
-    wells = improved_df["Well"]
+    wells = improved_df.loc[:,"Well"]
     for well in wells:
         row = improved_df.loc[improved_df['Well'] == well]
-        #row = row.sort_values(by = "Day")
+        row["Day"] = pd.to_numeric(row["Day"])
+        row = row.sort_values("Day")
         well_df_dict[well] = row
 #        if well in well_df_dict.keys(): 
 #            new_well_df_dict[well].append(row)
