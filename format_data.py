@@ -10,7 +10,7 @@ col_headers = ["Treatment", "Well", "Day", "Area", "Diameter", "Mean Intensity"]
 
 def format_data(df):
     # get cystanoid prediction rows
-    print("out.csv df: ", df)
+    print("out.csv: ", df)
     cystanoid_rows = df.loc[df["Predicted Class"] == "cystanoid"].reset_index()
     filename_df = cystanoid_rows.loc[:,"filename"]
     #print("filename_df : ", filename_df)
@@ -54,6 +54,25 @@ def _parse_filenames(filename_df):
     new_df["Well"] = wells 
     new_df["Day"] = days
     return new_df
+
+#XXX working here to format Louisa output
+# PRESUMED FILENAME FORMAT:
+# day 14/ROCK_5_uM_09.csv
+# "day" {day number}/{treatement}_{id}".csv"
+# Will consider treatment and id one field just called treatment
+# Headers to add --> ["Treatment"]
+# need to later add the headers  ["Day X Area", "Day X Intensity"]
+def _parse_louisa_filenames(filename_df):
+    # get containing dir name
+    # parse to get day number from it
+    # get treatment from filename (basically just the filename minus .csv, may not
+    # need to actually do anything)
+
+#XXX assumes all csvs have been merged into one big holy dataset and will merge rows
+# with same treatment to fill holes (ie there is one row with null for day 0, day 7, but
+# not null 14 which needs to merge w one row with null day 7, 14 etc..)
+def merge_same_treatment_csvs(big_df):
+
 
 # adds area, diameter, mean intensity info to the given dataframe
 def add_relevant_info(in_prog_df, initial_df):
