@@ -26,7 +26,8 @@ OUTPUT:
 '''
 
 col_headers = ["Treatment", "Well", "Day", "Area", "Diameter", "Mean Intensity"]
-new_col_headers = ["Treatment", "Concentration", "ID", "Area Day 0", "Area Day ...", "Mean Intensity Day ...", ]
+#new_col_headers = ["Treatment", "Concentration", "ID", "Area Day 0", "Area Day ...", "Mean Intensity Day ...", ]
+new_new_col_headers = ["Treatment", "Concentration", "ID", "Day", "Area", "Intensity"]
 
 # old_headers =filename	object_id	timestep	labelimage_oid	User Label	Predicted Class	Probability of bkgrd	Probability of cystanoid	Minimum intensity_0	Minimum intensity_1	Minimum intensity_2	Maximum intensity_0	Maximum intensity_1	Maximum intensity_2	Size in pixels	Radii of the object_0	Radii of the object_1	Variance of Intensity_0	Variance of Intensity_1	Variance of Intensity_2	Mean Intensity_0	Mean Intensity_1	Mean Intensity_2	Diameter	Bounding Box Minimum_0	Bounding Box Minimum_1	Bounding Box Maximum_0	Bounding Box Maximum_1	Center of the object_0	Center of the object_1 
 
@@ -54,9 +55,10 @@ def format_louisa_data(df):
     filename_df = cystanoid_rows.loc[:,"filename"]
     #print("filename_df : ", filename_df)
     with_file_cols_df = _parse_louisa_filenames(filename_df)
+    add_days_column(with_file_cols_df, cystanoid_rows)
     #print("with file info df: ", with_file_cols_df)
-    improved_df = add_relevant_info_multi(with_file_cols_df, cystanoid_rows)
-    improved_df.to_excel("./excel_out.xlsx")
+    add_relevant_info_multi(with_file_cols_df, cystanoid_rows)
+    with_file_cols_df.to_excel("./excel_out.xlsx")
     #print("improved df: ", improved_df)
 
 
@@ -105,8 +107,6 @@ def _parse_louisa_filenames(filename_df):
     treatments = []
     concentrations = []
     ids = []
-    #XXX need to get day from other col of df
-    #day = []
 
     for filename in filename_df:
         items = filename.split("_")
@@ -115,13 +115,17 @@ def _parse_louisa_filenames(filename_df):
             if (len(items) < 3):
                 raise NameError("The filename " + filename + \
                         " does not contain enough information")
-            elif (len(items) > 3):
-                concentrations.append(item[1])
+            # if length == 3 then no concentration (ie dmso) add none to concentration
+            elif (len(items) == 3):
+                concentrations.append(None)
+            else:
+                concentrations.append(items[1])
 
-            treatments.append(item[0])
+            treatments.append(items[0])
             # second to last element is the id
-            ids.append(item[-2])
+            ids.append(items[-2])
         except NameError as e:
+            print("Exception: ", e)
             print("ERROR: Skipping file ", filename, " beceause it does not have "+\
                 "enough information")
             continue
@@ -130,6 +134,9 @@ def _parse_louisa_filenames(filename_df):
     new_df["Concentration"] = concentrations
     new_df["ID"] = ids
     return new_df
+
+def add_days_column(in_prog_df, initial_df):
+    in_prog_df["Day"] = initial_df["day"]
 
 # Not "TIDY" attempt
 
@@ -217,9 +224,9 @@ def add_relevant_info_multi(in_prog_df, initial_df):
     in_prog_df.loc[:,'Mean Intensity'] = pd.Series(intensities, index=in_prog_df.index)
     # Outer index (treatment, concentration, id should all have same # of unique occurences)
     # inner index -> day
-    in_prog.set_index(["Treatment", "Concentration", "ID", "Day"], inplace=True)
-    in_prog.sort_index(inplace=True)
-    print("df, multi-indexed: ", in_prog)
+    in_prog_df.set_index(["Treatment", "Concentration", "ID", "Day"], inplace=True)
+    in_prog_df.sort_index(inplace=True)
+    print("df, multi-indexed: ", in_prog_df)
 
 
 # adds area, diameter, mean intensity info to the given dataframe
