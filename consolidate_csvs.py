@@ -27,6 +27,11 @@ It assumes all the csvs in the directory given have the same headers.
 It assumes the directory containing the csvs is labeled with the day number,
 typically as "/other directories/day 1/...csv files".
 It assumes the parent directory named with the day has NO other numbers in the name.
+It assumes the output of ilastik is stored in CSVS and that the output of formatting the data
+is a .xlsx or any file that is NOT a csv. It assumes there are no csvs under the directory 
+passed as an argument that are not wanted in the analysis of ilastik output. (HINT: 
+    perhaps store this script in a directory called "scripts" somewhere above the root
+    of your cystic images)
 
 OUTPUT:
 The output is stored as out_{day}.csv in the directory from which this script was
@@ -41,6 +46,19 @@ def rename_files(csv_dir):
         old_file_path = os.path.join(csv_dir, filename)
         new_file_path = os.path.join(csv_dir, new_name)
         os.rename(old_file_path, new_file_path) 
+
+# Returns the path to the renamed file
+def rename_file(file):
+    print("Renaming ", file)
+    parts = os.path.split(file)
+    filename = parts[1]
+    csv_dir = parts[0]
+    new_name = filename.replace(' ', '_')
+    print("New name ", new_name)
+    old_file_path = os.path.join(csv_dir, filename)
+    new_file_path = os.path.join(csv_dir, new_name)
+    os.rename(old_file_path, new_file_path) 
+    return new_file_path
 
 
 # gets from sys.argv[0] / first arg passed to command
@@ -172,9 +190,10 @@ def consolidate_csvs_recursive(csv_files):
     other_files = csv_files[2:]
     # now the rest, no headers:    
     for csv in other_files:
-        day = get_day_recursive(csv)
+        new_csv_path = rename_file(csv)
+        day = get_day_recursive(new_csv_path)
         print("day: ", day)
-        with open(csv, "r+") as f:
+        with open(new_csv_path, "r+") as f:
             #supposed_header = f.readline()
             # skip headers
             f.readline()
@@ -201,20 +220,21 @@ def consolidate_csvs_recursive(csv_files):
 #def _write_first_file(fout, csv_files, day):
 def _write_first_file(fout, csv_files):
     # first file, gets the headers
-    first_file = open(csv_files[0])
+    new_path = rename_file(csv_files[0])
+    first_file = open(new_path)
     header = first_file.readline()
     # adding filename and day column to output
     #new_header = "filename," + header
     new_header = "filename,day," + header
     print("new_header \n", new_header)
     fout.write(new_header)
-    day = get_day_recursive(csv_files[0])
+    day = get_day_recursive(new_path)
     for line in first_file:
         print("line before \n", line)
         # add filename and day to the file
         #first_filename = ntpath.basename(csv_files[0])
         #line_after = first_filename + line
-        line_after = _process_line(csv_files[0], day, line)
+        line_after = _process_line(new_path, day, line)
         assert(line != line_after)
         print("line after \n", line_after)
         fout.write(line_after)
@@ -230,7 +250,7 @@ if __name__ == "__main__":
     #for i, arg in enumerate(sys.argv):
     print("args: ", str(sys.argv))
     csv_dir = sys.argv[1]
-    rename_files(csv_dir)
+    #rename_files(csv_dir)
     #csvs = get_csvs(csv_dir)
     #day = get_day(csv_dir)
     #consolidate_csvs(csvs, day)
