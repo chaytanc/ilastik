@@ -2,6 +2,7 @@ import os
 import sys
 import ntpath
 from pathlib import Path
+import re
 
 
 #XXX todo: does this work on windows and will I need it to do so if I run 
@@ -20,7 +21,8 @@ EFFECTS:
 This script takes the many individual output csvs from a given folder and
 adds them to one csv as rows.  It adds a column called "filename" and a col
 called "day". It renames all files in the directory to use underscores
-rather than spaces.
+rather than spaces. 
+This script ignores the csv file "out\.*.csv"
 
 PRECONDITIONS:
 It assumes all the csvs in the directory given have the same headers.
@@ -49,12 +51,12 @@ def rename_files(csv_dir):
 
 # Returns the path to the renamed file
 def rename_file(file):
-    print("Renaming ", file)
+    #print("Renaming ", file)
     parts = os.path.split(file)
     filename = parts[1]
     csv_dir = parts[0]
     new_name = filename.replace(' ', '_')
-    print("New name ", new_name)
+    #print("New name ", new_name)
     old_file_path = os.path.join(csv_dir, filename)
     new_file_path = os.path.join(csv_dir, new_name)
     os.rename(old_file_path, new_file_path) 
@@ -76,12 +78,23 @@ def get_csvs(csv_dir):
     return csv_files
 
 def get_csvs_recursive(csv_dir):
-    csv_files = [csv for csv in Path(csv_dir).rglob('*.csv')]
+    csv_files = []
+    # Excludes strings matching out.*\.csv regex pattern
+    pattern = re.compile(r'out.*')
+    #csv_files = [csv for csv in Path(csv_dir).rglob('*.csv')]
+    for csv in Path(csv_dir).rglob('*.csv'):
+        #print("csv stem: ", csv.stem)
+        bad_csv = re.match(pattern, csv.stem)
+        if bad_csv:
+            print("skipping csv: ", csv.stem)
+        else:
+            #print("good csv: ", csv.stem)
+            csv_files.append(csv)
     try:
         file1 = csv_files[0]
         print("First csv file: " + str(file1))
     except:
-        raise FileNotFoundError("Could not find any csv files in ", csv_dir)
+        raise FileNotFoundError("Could not find any csv files in " + str(csv_dir))
     return csv_files
 
 # This method of getting the day assumes we are operating on a csv_dir that represents
@@ -93,7 +106,7 @@ def get_day(csv_dir):
     # Check grandparent if we don't find parent number
     if day == "":
         split_path = os.path.split(csv_dir)
-        print("Split path: ", split_path)
+        #print("Split path: ", split_path)
         split_again = os.path.split(split_path[0])
         grandparent_dir = split_again[1]
         print("Using grandparent ", grandparent_dir, " to find which day the images were taken")
@@ -105,7 +118,6 @@ def get_day(csv_dir):
 
     return day
 
-#XXX working here to reconcile possible day ebing below root_dir as a folder name
 # This method of getting the day allows for passing in a root_dir above
 # where the actual csv files are located
 
@@ -118,7 +130,7 @@ def get_day_recursive(csv_file):
 
 def get_day_recursive_helper(csv_dir, height):
     split_path = os.path.split(csv_dir)
-    print("Split path: ", split_path)
+    #print("Split path: ", split_path)
     parent_dir = split_path[1]
     day = find_number(parent_dir)
     # Check grandparent if we don't find parent number
@@ -192,7 +204,7 @@ def consolidate_csvs_recursive(csv_files):
     for csv in other_files:
         new_csv_path = rename_file(csv)
         day = get_day_recursive(new_csv_path)
-        print("day: ", day)
+        #print("day: ", day)
         with open(new_csv_path, "r+") as f:
             #supposed_header = f.readline()
             # skip headers
@@ -207,7 +219,7 @@ def consolidate_csvs_recursive(csv_files):
                     # also appends day column
                     #processed_line = ntpath.basename(csv) + "," + day + "," + line
                     processed_line = _process_line(csv, day, line)
-                    print("new line \n", processed_line)
+                    #print("new line \n", processed_line)
                     fout.write(processed_line)
             f.close() # not really needed, closes input file
 

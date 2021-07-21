@@ -154,7 +154,8 @@ def add_relevant_info_multi(in_prog_df, initial_df):
 def add_relevant_info(in_prog_df, initial_df):
     print("initial df: ", initial_df)
     areas = initial_df.loc[:,'Size in pixels']
-    #print("Areas: ", areas)
+
+    print("Areas: ", areas)
     diameters = initial_df.loc[:,'Diameter']
     intensities = initial_df.loc[:,'Mean Intensity_0']
     # copy the initial_df so we can add some stuff to it
