@@ -7,8 +7,6 @@ import re
 
 #XXX todo: does this work on windows and will I need it to do so if I run 
 # on hyak instead of individual pcs
-#XXX working on making this take variable number of directories containing
-# csvs and combining all from them
 ''' 
 USAGE: python3 consolidate_csvs.py {path to dir containing output csvs}
     Ex:
@@ -51,12 +49,12 @@ def rename_files(csv_dir):
 
 # Returns the path to the renamed file
 def rename_file(file):
-    #print("Renaming ", file)
+    print("Renaming ", file)
     parts = os.path.split(file)
     filename = parts[1]
     csv_dir = parts[0]
     new_name = filename.replace(' ', '_')
-    #print("New name ", new_name)
+    print("New name ", new_name)
     old_file_path = os.path.join(csv_dir, filename)
     new_file_path = os.path.join(csv_dir, new_name)
     os.rename(old_file_path, new_file_path) 
@@ -77,6 +75,8 @@ def get_csvs(csv_dir):
 
     return csv_files
 
+# Looks in all directories below csv_dir for csv files and adds them to the
+# csv file list if they aren't an out.csv type file
 def get_csvs_recursive(csv_dir):
     csv_files = []
     # Excludes strings matching out.*\.csv regex pattern
@@ -214,12 +214,12 @@ def consolidate_csvs_recursive(csv_files):
             for line in f:
                 # Only write lines that are not the header
                 if(line != header):
-                    #print("line before \n", line)
+                    print("line before \n", line)
                     # need to append filename to the csv output to the front
                     # also appends day column
                     #processed_line = ntpath.basename(csv) + "," + day + "," + line
                     processed_line = _process_line(csv, day, line)
-                    #print("new line \n", processed_line)
+                    print("new line \n", processed_line)
                     fout.write(processed_line)
             f.close() # not really needed, closes input file
 

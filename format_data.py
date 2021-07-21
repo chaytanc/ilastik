@@ -91,7 +91,6 @@ def _parse_filenames(filename_df):
     new_df["Day"] = days
     return new_df
 
-#XXX working here to format Louisa output
 # PRESUMED FILENAME FORMAT:
 # day 14/ROCK_5_uM_09_table.csv
 # "day" {day number}/{treatment}_{id}_"table.csv"
@@ -183,6 +182,13 @@ def get_full_csv(well_df_dict):
     print("final df: ", big_df)
     # write to csv
     big_df.to_csv("modified_out.csv")
+
+#XXX working here to add fold change column based on (last day - first day) / first day
+def _calculate_fold_change(improved_df):
+    fold_changes = []
+    #  for each unique treatment, conc, id, get days and areas
+    # fold change is latest day - earliest day / latest day
+    # put fold change for all cols of that unique treat, conc, id and multi index
 
 if __name__ == "__main__":
     print("args: ", str(sys.argv))
