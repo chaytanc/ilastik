@@ -14,6 +14,8 @@
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
 imagesDir=$1
+#https://stackoverflow.com/questions/14447406/bash-shell-script-check-for-a-flag-and-grab-its-value
+#cleanup
 
 # Gets all images from
 images=$(ls "$imagesDir")
