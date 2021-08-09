@@ -14,8 +14,6 @@
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
 imagesDir=$1
-#https://stackoverflow.com/questions/14447406/bash-shell-script-check-for-a-flag-and-grab-its-value
-#cleanup
 
 # Gets all images from
 images=$(ls "$imagesDir")
@@ -26,6 +24,7 @@ echo $(ls "$imagesDir")
 #NOTE: ilastik has an error which requires NO SPACES in files, 
 # even if in quotes
 noSpacesImages=""
+# Determines field separators (ie spaces in file names should not separate fields)
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 #XXX need to do this same looping technique to get probability files from output of segmentation
@@ -44,36 +43,55 @@ echo "Done renaming"
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-#XXX instead of making output dir underneath imgs dir, could as for
-# root dir and then make output under that and get images by looking
-# recursively for .tif
-
+segmentationOutput="${$imagesDir}/../out"
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
-/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+#XXX using scrubbed temporarily while we potentially buy disk space
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+#/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
 	--output_format=tif \
-	--output_filename_format=/{dataset_dir}/../out/{nickname}.tif \
+	--output_filename_format=$segmentationOutput/{nickname}.tif \
 	--export_source="Probabilities" \
 	--raw_data=$noSpacesImages || return 1;
 
 # OBJECT DETECTION
 #NOTE: Put your model name under --project="../models/your_model.ilp"
 
+# Looping through output files from segmentation and creating the segmentation-images variable we will pass
+# to object detection
+noSpacesSegImages=""
+# Determines field separators (ie spaces in file names should not separate fields)
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+for image in $segmentationOutput
+do
+	echo "Image: $image"
+	newImage=$(echo $image | sed -e "s/ /_/g")
+	cp "$segmentationOutput/$image" "$segmentationOutput/$newImage"
+	echo "New file name: $newImage"
+	noSpacesSegImages="$noSpacesSegImages $segmentationOutput/$newImage "
+done
+IFS=$SAVEIFS
+echo "Done renaming"
+
 # If you are processing more than one volume in a single command, provide all inputs of a given type in sequence:
 #--raw_data "my_grayscale_stack_1/*.png" "my_grayscale_stack_2/*.png" "my_grayscale_stack_3/*.png" \
 #--segmentation_image my_unclassified_objects_1.h5/binary_segmentation_volume my_unclassified_objects_2.h5/binary_segmentation_volume my_unclassified_objects_3.h5/binary_segmentation_volume
-/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+#/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format=tif \
 	--output_filename_format=/{dataset_dir}/../out/{nickname}.tif \
 	--export_source="Probabilities" \
   --raw_data=$noSpacesImages \
-#XXX --segmentation_image-
+  --segmentation_image=$noSpacesSegImages \
 
-
+#XXX run consolidate_csvs.py
+#XXX run format_data.py
+# Transfer excel output back to local computer??
 #XXX run cleanup script (base on flag parameter passed in)
 
 # Check error status of run
