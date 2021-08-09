@@ -22,15 +22,15 @@ rather than spaces.
 This script ignores the csv file "out\.*.csv"
 
 PRECONDITIONS:
-It assumes all the csvs in the directory given have the same headers.
+It assumes all the csvs in the directory given have the same column labels (first row of the file).
 It assumes the directory containing the csvs is labeled with the day number,
 typically as "/other directories/day 1/...csv files".
 It assumes the parent directory named with the day has NO other numbers in the name.
 It assumes the output of ilastik is stored in CSVS and that the output of formatting the data
-is a .xlsx or any file that is NOT a csv. It assumes there are no csvs under the directory 
-passed as an argument that are not wanted in the analysis of ilastik output. (HINT: 
-    perhaps store this script in a directory called "scripts" somewhere above the root
-    of your cystic images)
+is a .xlsx or any file that is NOT a csv that might get stored under the root directory passed in to this script.
+In other words, it assumes there are no csvs under the directory passed as an argument that are not wanted
+in the analysis of ilastik output. (HINT: perhaps store this and other formatting scripts in a directory called "scripts"
+somewhere above the root of your cystic images)
 
 OUTPUT:
 The output is stored as out_{day}.csv in the directory from which this script was
@@ -83,11 +83,11 @@ def get_csvs(csv_dir):
 def get_csvs_recursive(csv_dir):
     csv_files = []
     # Excludes strings matching out.*\.csv regex pattern
-    pattern = re.compile(r'out.*')
+    excluded_pattern = re.compile(r'out.*')
     # csv_files = [csv for csv in Path(csv_dir).rglob('*.csv')]
     for csv in Path(csv_dir).rglob('*.csv'):
         # print("csv stem: ", csv.stem)
-        bad_csv = re.match(pattern, csv.stem)
+        bad_csv = re.match(excluded_pattern, csv.stem)
         if bad_csv:
             print("skipping csv: ", csv.stem)
         else:
