@@ -5,7 +5,7 @@
 # local computer, it will copy your local files to the Hyak and ssh automatically, though it will still prompt
 # you for the password and 2FA.
 #
-# PARAMETERS:
+# INPUT / PARAMETERS:
 #   --noclean: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
@@ -19,7 +19,7 @@
 #         benof@uw.edu to request to gain access).
 #     2) getopts,  is downloaded on the Hyak
 #
-# EFFECTS:
+# OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
 # It's better this way, trust me.
 # XXX Output will go to ./../out/??
@@ -54,6 +54,7 @@ cd hyakDir
 # Start run_batches.py
 if [ $noclean == true ]
 then
+#XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
     ./run_batches --noclean "${hyakDir}${rootdir}"
 else
     ./run_batches "${hyakDir}${rootdir}"
