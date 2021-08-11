@@ -48,6 +48,7 @@ echo "Done renaming"
 
 #XXX need to mkdir??
 segmentationOutput="${imagesDir}/../out/segmentation"
+mkdir $segmentationOutput
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
 #XXX using scrubbed temporarily while we potentially buy disk space
