@@ -1,16 +1,19 @@
 #!/bin/bash
 
-# This script takes all images from a given folder and runs a batch of pixel segmentation and object detection
-# headlessly on the Hyak server.
+# This script takes all images from a given folder and runs a batch of pixel segmentation and
+# object detection headlessly on the Hyak server.
 # PARAMETERS:
 #   imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
 #     It should contain only raw images that you intend to process with ilastik.
 # EFFECTS:
-# All files in the given directory will be renamed to use underscores instead of spaces.
-# It's better this way, trust me.
-# Output will go to ./../out/.
-# It will consist of probability images from pixel segmentation, detected object images from object detection, and
-# csv measurement and analysis from object detection, as well as one output excel file summarizing the findings.
+#     All files in the given directory will be renamed to use underscores instead of spaces.
+#     It's better this way, trust me.
+#     Output will go to ./../out/.
+#     It will consist of probability images from pixel segmentation, detected object images
+#     from object detection, and csv measurement and analysis from object detection,
+#     as well as one output excel file summarizing the findings.
+# REFERENCES:
+#     https://www.ilastik.org/documentation/basics/headless.html
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
 imagesDir=$1
@@ -53,10 +56,10 @@ segmentationOutput="${imagesDir}/../out/segmentation"
 /gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
-	--output_format=tif \
-	--output_filename_format=$segmentationOutput/{nickname}.tif \
+	--output_format="tif" \
+	--output_filename_format="$segmentationOutput/{nickname}.tif" \
 	--export_source="Probabilities" \
-	--raw_data=$noSpacesImages;
+	--raw_data=$noSpacesImages
 	#XXX sourced script? Return?
 
 # OBJECT DETECTION
@@ -87,8 +90,8 @@ echo "Done renaming"
 /gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
-	--output_format=tif \
-	--output_filename_format=/{dataset_dir}/../out/{nickname}.tif \
+	--output_format="tif" \
+	--output_filename_format="/{dataset_dir}/../out/{nickname}.tif" \
 	--export_source="Probabilities" \
   --raw_data=$noSpacesImages \
   --segmentation_image=$noSpacesSegImages \
