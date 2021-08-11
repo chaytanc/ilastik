@@ -43,19 +43,20 @@ echo "Done renaming"
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-segmentationOutput="${imagesDir}/../out"
+#XXX need to mkdir??
+segmentationOutput="${imagesDir}/../out/segmentation"
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
 #XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
 	--output_format=tif \
 	--output_filename_format=$segmentationOutput/{nickname}.tif \
 	--export_source="Probabilities" \
-	--raw_data=$noSpacesImages || return 1;
+	--raw_data=$noSpacesImages;
 	#XXX sourced script? Return?
 
 # OBJECT DETECTION
@@ -82,8 +83,8 @@ echo "Done renaming"
 #--raw_data "my_grayscale_stack_1/*.png" "my_grayscale_stack_2/*.png" "my_grayscale_stack_3/*.png" \
 #--segmentation_image my_unclassified_objects_1.h5/binary_segmentation_volume my_unclassified_objects_2.h5/binary_segmentation_volume my_unclassified_objects_3.h5/binary_segmentation_volume
 # ** Replace project="..." **
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format=tif \
