@@ -33,7 +33,7 @@ rootdir=$1
 uwid=$2
 noclean=false
 #XXX switch to not be in scrubbed once lab gets its own storage
-hyakDir="/gscratch/scrubbed/freedman/ilastik/${$uwid}"
+hyakDir="/gscratch/scrubbed/freedman/ilastik/${uwid}"
 # While number of parameters passed is greater than 0, parse them
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -45,18 +45,18 @@ done
 
 # Transfer scp local files to Hyak
   # Login
-scp $rootdir "${$uwid}@klone.hyak.uw.edu:${$hyakDir}/"
+scp $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/"
 # ssh into Hyak
   # Login
 ssh "{$uwid}@klone.hyak.uw.edu"
 mkdir hyakDir
 cd hyakDir
 # Start run_batches.py
-if [ noclean==true ]
+if [ $noclean == true ]
 then
-    ./run_batches --noclean "${$hyakDir}${$rootdir}"
+    ./run_batches --noclean "${hyakDir}${rootdir}"
 else
-    ./run_batches "${$hyakDir}${$rootdir}"
+    ./run_batches "${hyakDir}${rootdir}"
 fi
 
 

@@ -43,7 +43,7 @@ echo "Done renaming"
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-segmentationOutput="${$imagesDir}/../out"
+segmentationOutput="${imagesDir}/../out"
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
 #XXX using scrubbed temporarily while we potentially buy disk space
