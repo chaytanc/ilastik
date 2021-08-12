@@ -52,6 +52,8 @@ imagesDir=$newDir
 # (and make sure to put your model in the models directory)
 
 # Have to go up two directories to get to /testRootDir, one for the "day" and another to get out of /in
+#segmentationOutput="${imagesDir}/../../out/segmentation"
+#XXX working here to use absolute paths based on expected tree structure -- must keep tree structure invariant
 segmentationOutput="${imagesDir}/../../out/segmentation"
 mkdir $segmentationOutput
 #XXX need to install ilastik in freedman and chaytan directories
