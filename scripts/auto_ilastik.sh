@@ -35,7 +35,7 @@ for image in $images
 do
 	echo "Image: $image"
 	newImage=$(echo $image | sed -e "s/ /_/g")
-	cp -r "$imagesDir/$image" "$imagesDir/$newImage"
+	cp "$imagesDir/$image" "$imagesDir/$newImage"
 	echo "New file name: $newImage"
 	noSpacesImages="$noSpacesImages $imagesDir/$newImage "
 done
@@ -81,7 +81,7 @@ for image in $segmentationOutput
 do
 	echo "Image: $image"
 	newImage=$(echo $image | sed -e "s/ /_/g")
-	cp -r "$segmentationOutput/$image" "$segmentationOutput/$newImage"
+	cp "$segmentationOutput/$image" "$segmentationOutput/$newImage"
 	echo "New file name: $newImage"
 	noSpacesSegImages="$noSpacesSegImages $segmentationOutput/$newImage "
 done
