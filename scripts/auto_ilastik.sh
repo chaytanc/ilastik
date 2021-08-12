@@ -51,8 +51,8 @@ imagesDir=$newDir
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-#XXX need to mkdir??
-segmentationOutput="${imagesDir}/../out/segmentation"
+# Have to go up two directories to get to /testRootDir, one for the "day" and another to get out of /in
+segmentationOutput="${imagesDir}/../../out/segmentation"
 mkdir $segmentationOutput
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
@@ -97,7 +97,7 @@ echo "Done renaming"
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format="tif" \
-	--output_filename_format="/{dataset_dir}/../out/{nickname}.tif" \
+	--output_filename_format="/{dataset_dir}/../../out/{nickname}.tif" \
 	--export_source="Probabilities" \
   --raw_data=$noSpacesImages \
   --segmentation_image=$noSpacesSegImages \
