@@ -30,10 +30,11 @@
 
 # Parse arguments and options (flags)
 rootdir=$1
+#XXX need to store rootdir basename in case ./start.sh is called from diff dir
 uwid=$2
 noclean=false
 #XXX switch to not be in scrubbed once lab gets its own storage
-hyakDir="/gscratch/scrubbed/freedman/ilastik/${uwid}"
+hyakDir="/gscratch/scrubbed/freedman/ilastik/"
 # While number of parameters passed is greater than 0, parse them
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -45,19 +46,34 @@ done
 
 # Transfer scp local files to Hyak
   # Login
-scp $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/"
+scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/"
 # ssh into Hyak
   # Login
 ssh "{$uwid}@klone.hyak.uw.edu"
-mkdir hyakDir
-cd hyakDir
+mkdir $hyakDir
+cd $hyakDir
+
+# Make expected file structure on the Hyak (ssh must have succeeded XXX put an exit in above if it didnt')
+#XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak
+userdir="$hyakDir$uwid"
+outdir="$userdir/out/"
+project_outdir="$outdir/$rootdir/"
+indir="$userdir/in/"
+project_indir="$indir/$rootdir/"
+
+dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
+for path in $dirtree
+do
+    mkdir "$path"
+done
+
 # Start run_batches.py
 if [ $noclean == true ]
 then
 #XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
-    ./run_batches --noclean "${hyakDir}${rootdir}"
+    ./run_batches --noclean "$project_indir"
 else
-    ./run_batches "${hyakDir}${rootdir}"
+    ./run_batches "$project_indir"
 fi
 
 

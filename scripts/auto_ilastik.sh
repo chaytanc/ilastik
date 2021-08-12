@@ -3,8 +3,11 @@
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:
-#   imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
-#     It should contain only raw images that you intend to process with ilastik.
+#     XXX considering making user pass root dir and day X but need to examine presumed file strucutre first
+#     imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
+#        It should contain only raw images that you intend to process with ilastik.
+# PRECONDITIONS:
+#     the root dir of the project should be under XXX change later /gscratch/scrubbed/freedman
 # EFFECTS:
 #     All files in the given directory will be renamed to use underscores instead of spaces.
 #     It's better this way, trust me.
@@ -17,6 +20,12 @@
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
 imagesDir=$1
+
+#XXX get project name / root dir base name
+project=
+
+#XXX get day of the project we're currently operating on
+day=$(basename imagesDir)
 
 # Gets all images from
 images=$(ls "$imagesDir")
@@ -43,7 +52,9 @@ IFS=$SAVEIFS
 echo "Done renaming"
 
 # Rename imagesDir passed to have no underscores
+echo $imagesDir
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
+echo $newDir
 mv "$imagesDir" $newDir
 imagesDir=$newDir
 
@@ -54,7 +65,7 @@ imagesDir=$newDir
 # Have to go up two directories to get to /testRootDir, one for the "day" and another to get out of /in
 #segmentationOutput="${imagesDir}/../../out/segmentation"
 #XXX working here to use absolute paths based on expected tree structure -- must keep tree structure invariant
-segmentationOutput="${imagesDir}/../../out/segmentation"
+segmentationOutput="/gscratch/scrubbed/freedman/ilastik/out/segmentation/"
 mkdir $segmentationOutput
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
