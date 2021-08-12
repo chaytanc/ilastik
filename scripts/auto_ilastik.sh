@@ -45,6 +45,7 @@ echo "Done renaming"
 # Rename imagesDir passed to have no underscores
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
 mv "$imagesDir" $newDir
+imagesDir=$newDir
 
 # PIXEL SEGMENTATION
 #NOTE: Put your model name under --project="your_model.ilp"
