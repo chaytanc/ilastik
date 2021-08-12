@@ -40,8 +40,8 @@ def parse_args():
     return parser.parse_args()
 
 
-# Gets all directories under root_dir that contain "day" or "Day"
-def get_subdirs(root_dir):
+# Gets all directories under rootdir that contain "day" or "Day"
+def get_subdirs(rootdir):
     subdirs = []
     # Excludes strings matching out.*\.csv regex pattern
     excluded_pattern = re.compile(r'out.*')
@@ -49,16 +49,16 @@ def get_subdirs(root_dir):
     #XXX not sure this Path thing works w regex, nor that it shows subdirs or is specifically for files
     # Recurse through subdirs and get those that match day or Day pattern
     pattern = r'[(day)(Day)]'
-    # subs = Path(root_dir).rglob()
+    # subs = Path(rootdir).rglob()
     # for subdir in subs:
-    for root, foundSubdirs, files in os.walk(root_dir):
+    for root, foundSubdirs, files in os.walk(rootdir):
         for subdir in filter(lambda x: re.match(pattern, x), foundSubdirs):
             bad_dir = re.match(excluded_pattern, subdir)
             if bad_dir:
                 print("skipping dir: ", subdir)
             else:
                 print("good dir: ", subdir)
-                #XXX need to make sure we append full path from root_dir to subdir
+                #XXX need to make sure we append full path from rootdir to subdir
                 # Adds root so we get the full relative path
                 subdirs.append(root + subdir)
 
@@ -68,8 +68,9 @@ def get_subdirs(root_dir):
         print("First subdir:  " + str(dir1))
     except IndexError as e:
         print(e)
-        raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(root_dir))
+        raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(rootdir))
     return subdirs
+
 #MOVED THIS TO START.SH instead
 # def make_file_structure(rootdir, uwid):
 #     #XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak

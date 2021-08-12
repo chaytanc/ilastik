@@ -11,6 +11,7 @@
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
 #   rootdir: This is the path to the folder containing "day X" folders which contain the raw images of organoids.
+#       It should be relative to the location this start.sh script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
 #   uwid: Your Hyak-authorized UW netID. Do not include "@uw.edu" in this argument.
 #
@@ -30,11 +31,24 @@
 
 # Parse arguments and options (flags)
 rootdir=$1
-#XXX need to store rootdir basename in case ./start.sh is called from diff dir
+
+# Rename all directories to have underscores instead of spaces, starting at rootdir
+workingDir=$(pwd)
+cd $rootdir
+cd ".."
+for d in $(find . -name '*_*' -type d) ; do
+    new=$(echo $d | sed -e 's/_/ /g')
+    mv $d $new
+done
+cd $workingDir
+
+noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
+
 uwid=$2
 noclean=false
 #XXX switch to not be in scrubbed once lab gets its own storage
 hyakDir="/gscratch/scrubbed/freedman/ilastik/"
+
 # While number of parameters passed is greater than 0, parse them
 while [[ "$#" -gt 0 ]]; do
     case $1 in

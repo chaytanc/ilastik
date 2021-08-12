@@ -7,11 +7,10 @@
 #     imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
 #        It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
-#     the root dir of the project should be under XXX change later /gscratch/scrubbed/freedman
+#     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
+#     the imagesDir passed in should have a corresponding dir in .../uwID/out/imagesDir
 # EFFECTS:
-#     All files in the given directory will be renamed to use underscores instead of spaces.
-#     It's better this way, trust me.
-#     Output will go to ./../out/.
+#     Output will go to ./../out/rootdir/day_X.
 #     It will consist of probability images from pixel segmentation, detected object images
 #     from object detection, and csv measurement and analysis from object detection,
 #     as well as one output excel file summarizing the findings.
@@ -21,25 +20,37 @@
 
 imagesDir=$1
 
-#XXX get project name / root dir base name
-project=
+# Rename imagesDir passed to have no underscores
+echo $imagesDir
+newDir=$(echo $imagesDir | sed -e "s/ /_/g")
+echo $newDir
+mv "$imagesDir" $newDir
+imagesDir=$newDir
 
 #XXX get day of the project we're currently operating on
-day=$(basename imagesDir)
+day=$(basename $imagesDir)
+projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
+# A path to where we want to put all output images and csvs relative to the working directory
+# We go up three dirs (one for day, another for projectName, another for "in/", then we're in uwID)
+outputDir="$imagesDir/../../../out/$projectName/$day/"
 
-# Gets all images from
+# Stores a list of all the images we're processing
 images=$(ls "$imagesDir")
 echo "Dir: "
 echo $imagesDir
 echo "IMAGES: "
 echo $(ls "$imagesDir")
-#NOTE: ilastik has an error which requires NO SPACES in files, 
+echo "day: "
+echo $day
+echo "projectName: "
+echo $projectName
+
+#NOTE: ilastik has an error which requires NO SPACES in files,
 # even if in quotes
 noSpacesImages=""
 # Determines field separators (ie spaces in file names should not separate fields)
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-#XXX need to do this same looping technique to get probability files from output of segmentation
 for image in $images
 do
 	echo "Image: $image"
@@ -51,22 +62,11 @@ done
 IFS=$SAVEIFS
 echo "Done renaming"
 
-# Rename imagesDir passed to have no underscores
-echo $imagesDir
-newDir=$(echo $imagesDir | sed -e "s/ /_/g")
-echo $newDir
-mv "$imagesDir" $newDir
-imagesDir=$newDir
 
 # PIXEL SEGMENTATION
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-# Have to go up two directories to get to /testRootDir, one for the "day" and another to get out of /in
-#segmentationOutput="${imagesDir}/../../out/segmentation"
-#XXX working here to use absolute paths based on expected tree structure -- must keep tree structure invariant
-segmentationOutput="/gscratch/scrubbed/freedman/ilastik/out/segmentation/"
-mkdir $segmentationOutput
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
 #XXX using scrubbed temporarily while we potentially buy disk space
@@ -76,10 +76,9 @@ mkdir $segmentationOutput
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
 	--output_format="tif" \
-	--output_filename_format="$segmentationOutput/{nickname}.tif" \
+	--output_filename_format="$outputDir/{nickname}.tif" \
 	--export_source="Probabilities" \
 	--raw_data=$noSpacesImages
-	#XXX sourced script? Return?
 
 # OBJECT DETECTION
 #NOTE: Put your model name under --project="../models/your_model.ilp"
@@ -90,13 +89,14 @@ noSpacesSegImages=""
 # Determines field separators (ie spaces in file names should not separate fields)
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-for image in $segmentationOutput
+for file in $outputDir
 do
-	echo "Image: $image"
-	newImage=$(echo $image | sed -e "s/ /_/g")
-	cp "$segmentationOutput/$image" "$segmentationOutput/$newImage"
+	echo "Image: $file"
+	newImage=$(echo $file | sed -e "s/ /_/g")
+	cp "$outputDir/$file" "$outputDir/$newImage"
 	echo "New file name: $newImage"
-	noSpacesSegImages="$noSpacesSegImages $segmentationOutput/$newImage "
+	# Appends the renamed image to the list of images
+	noSpacesSegImages="$noSpacesSegImages $outputDir/$newImage "
 done
 IFS=$SAVEIFS
 echo "Done renaming"
@@ -110,7 +110,7 @@ echo "Done renaming"
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format="tif" \
-	--output_filename_format="/{dataset_dir}/../../out/{nickname}.tif" \
+	--output_filename_format="$outputDir/{nickname}.tif" \
 	--export_source="Probabilities" \
   --raw_data=$noSpacesImages \
   --segmentation_image=$noSpacesSegImages \
