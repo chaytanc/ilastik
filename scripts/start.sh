@@ -18,7 +18,8 @@
 # PRECONDITIONS:
 #     1) Have a UW NetID that is authorized to login to the Hyak.(If this is not the case, contact
 #         benof@uw.edu to request to gain access).
-#     2) getopts,  is downloaded on the Hyak
+#     2) getopts, is downloaded on the Hyak
+#     3) .../freedman/ilastik/uwid directory is set up / have been added as a freedman user
 #
 # OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
@@ -29,22 +30,46 @@
 #https://stackoverflow.com/questions/14447406/bash-shell-script-check-for-a-flag-and-grab-its-value
 #cleanup
 
+# A func to kill the script and direct errors to stderr
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
 # Go to the directory from which this script is being run so paths relative to it work
 MY_PATH="`dirname \"$0\"`"
-cd $MY_PATH || exit 1
+cd $MY_PATH || die "Couldn't change dirs to where the script is"
 
 # Parse arguments and options (flags)
 
-# While number of parameters passed is greater than 0, parse them
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        -n|--noclean) noclean=true;;
-        -r|--rootdir) rootdir=$2; ;;
-        -u|--uwid) uwid=$2; ;;
-        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+## While number of parameters passed is greater than 0, parse them
+#while [[ "$#" -gt 0 ]]; do
+#    case $1 in
+#        -n|--noclean) noclean=true;;
+#        -r|--rootdir) rootdir=$2; ;;
+#        -u|--uwid) uwid=$2; ;;
+#        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+#    esac
+#    shift
+#done
+
+# Checks we have the proper number of arguments passed in
+[ "$#" -ge 2 ] || die "2 arguments required, $# provided"
+#check_args () {
+#  [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
+#}
+#check_args
+
+rootdir=$1
+uwid=$2
+while getopts :n: flag
+do
+    case "${flag}" in
+        n) noclean=true;;
+        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
-    shift
 done
+
 # Set up useful references
 noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
 #XXX switch to not be in scrubbed once lab gets its own storage
@@ -53,25 +78,29 @@ hyakDir="/gscratch/scrubbed/freedman/ilastik/"
 #uwid=$2
 #noclean=false
 
-# Rename all directories to have underscores instead of spaces, starting at rootdir
-workingDir=$(pwd)
-cd $rootdir || exit 1
-cd ".."
-for d in $(find . -name '*_*' -type d) ; do
-    new=$(echo $d | sed -e 's/_/ /g')
-    mv $d $new
-    echo "new dir: $new"
-done
-cd $workingDir
+remove_path_underscores () {
+    # Rename all directories to have underscores instead of spaces, starting at rootdir
+    workingDir=$(pwd)
+    cd $rootdir || die "couldn't cd to rootdir"
+    cd ".."
+    for d in $(find . -name '*_*' -type d) ; do
+        new=$(echo $d | sed -e 's/_/ /g')
+        mv $d $new
+        echo "new dir: $new"
+    done
+    cd $workingDir
+}
+remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
-#XXX should we assume that this exists and is set up already??
+#XXX should we assume that this exists and is set up already?? --> YES
 scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+#XXX gets here successfully and performs scp if the uwid dir already exists
 # ssh into Hyak
   # Login
 ssh "{$uwid}@klone.hyak.uw.edu"
-cd $hyakDir || exit 1
+cd $hyakDir || die "Couldn't find $hyakDir"
 
 # Make expected file structure on the Hyak (ssh must have succeeded XXX put an exit in above if it didnt')
 #XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak
@@ -84,7 +113,7 @@ project_indir="$indir/$rootdir/"
 dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
 for path in $dirtree
 do
-    mkdir "$path" || exit 1
+    mkdir "$path" || die "failed to uphold Hyak file structure invariant"
 done
 
 # Start run_batches.py

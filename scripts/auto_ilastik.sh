@@ -3,7 +3,6 @@
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:
-#     XXX considering making user pass root dir and day X but need to examine presumed file strucutre first
 #     imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
 #        It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
@@ -33,6 +32,7 @@ projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
 # A path to where we want to put all output images and csvs relative to the working directory
 # We go up three dirs (one for day, another for projectName, another for "in/", then we're in uwID)
 outputDir="$imagesDir/../../../out/$projectName/$day/"
+echo "outputDir: $outputDir"
 
 # Stores a list of all the images we're processing
 images=$(ls "$imagesDir")
