@@ -42,6 +42,10 @@ done
 IFS=$SAVEIFS
 echo "Done renaming"
 
+# Rename imagesDir passed to have no underscores
+newDir=$(echo $imagesDir | sed -e "s/ /_/g")
+mv "$imagesDir" $newDir
+
 # PIXEL SEGMENTATION
 #NOTE: Put your model name under --project="your_model.ilp"
 # (and make sure to put your model in the models directory)
