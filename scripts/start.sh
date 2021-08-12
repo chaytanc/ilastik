@@ -29,43 +29,49 @@
 #https://stackoverflow.com/questions/14447406/bash-shell-script-check-for-a-flag-and-grab-its-value
 #cleanup
 
+# Go to the directory from which this script is being run so paths relative to it work
+MY_PATH="`dirname \"$0\"`"
+cd $MY_PATH || exit 1
+
 # Parse arguments and options (flags)
-rootdir=$1
-
-# Rename all directories to have underscores instead of spaces, starting at rootdir
-workingDir=$(pwd)
-cd $rootdir
-cd ".."
-for d in $(find . -name '*_*' -type d) ; do
-    new=$(echo $d | sed -e 's/_/ /g')
-    mv $d $new
-done
-cd $workingDir
-
-noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
-
-uwid=$2
-noclean=false
-#XXX switch to not be in scrubbed once lab gets its own storage
-hyakDir="/gscratch/scrubbed/freedman/ilastik/"
 
 # While number of parameters passed is greater than 0, parse them
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -n|--noclean) noclean=true;;
+        -r|--rootdir) rootdir=$2; ;;
+        -u|--uwid) uwid=$2; ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
 done
+# Set up useful references
+noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
+#XXX switch to not be in scrubbed once lab gets its own storage
+hyakDir="/gscratch/scrubbed/freedman/ilastik/"
+#rootdir=$1
+#uwid=$2
+#noclean=false
+
+# Rename all directories to have underscores instead of spaces, starting at rootdir
+workingDir=$(pwd)
+cd $rootdir || exit 1
+cd ".."
+for d in $(find . -name '*_*' -type d) ; do
+    new=$(echo $d | sed -e 's/_/ /g')
+    mv $d $new
+    echo "new dir: $new"
+done
+cd $workingDir
 
 # Transfer scp local files to Hyak
   # Login
-scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/"
+#XXX should we assume that this exists and is set up already??
+scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 # ssh into Hyak
   # Login
 ssh "{$uwid}@klone.hyak.uw.edu"
-mkdir $hyakDir
-cd $hyakDir
+cd $hyakDir || exit 1
 
 # Make expected file structure on the Hyak (ssh must have succeeded XXX put an exit in above if it didnt')
 #XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak
@@ -78,7 +84,7 @@ project_indir="$indir/$rootdir/"
 dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
 for path in $dirtree
 do
-    mkdir "$path"
+    mkdir "$path" || exit 1
 done
 
 # Start run_batches.py
