@@ -27,7 +27,7 @@ noclean=false
 while getopts :n: flag
 do
     case "${flag}" in
-        n) noclean=true;;
+        n) noclean=true; shift;;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
