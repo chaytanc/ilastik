@@ -17,6 +17,21 @@
 #     https://www.ilastik.org/documentation/basics/headless.html
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
+# Parse arguments and options (flags)
+
+# Checks we have the proper number of arguments passed in
+[ "$#" -ge 1 ] || die "1 arguments required, $# provided"
+
+noclean=false
+#XXX copy this to auto_ilastik to parse noclean arg if it works here
+while getopts :n: flag
+do
+    case "${flag}" in
+        n) noclean=true;;
+        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
+    esac
+done
+
 imagesDir=$1
 
 # Rename imagesDir passed to have no underscores

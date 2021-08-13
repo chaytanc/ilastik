@@ -34,9 +34,9 @@ BASEDIR = "/gscratch/scrubbed/freedman/ilastik/"
 # Gets the command line arguments and returns them
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--noclean", action="store_true", help="does not automatically remove excess files from Ilastik output")
     parser.add_argument("rootdir", help="path to the directory containing 'day X' folders of raw images")
     # parser.add_argument("uwid", help="the UW NetID of the Hyak user for these batches")
-    parser.add_argument("--noclean", action="store_true", help="does not automatically remove excess files from Ilastik output")
     return parser.parse_args()
 
 
@@ -45,13 +45,10 @@ def get_subdirs(rootdir):
     subdirs = []
     # Excludes strings matching out.*\.csv regex pattern
     excluded_pattern = re.compile(r'out.*')
-    # csv_files = [csv for csv in Path(csv_dir).rglob('*.csv')]
-    #XXX not sure this Path thing works w regex, nor that it shows subdirs or is specifically for files
     # Recurse through subdirs and get those that match day or Day pattern
     pattern = r'[(day)(Day)]'
-    # subs = Path(rootdir).rglob()
-    # for subdir in subs:
     for root, foundSubdirs, files in os.walk(rootdir):
+        # Get subdirs that match day X pattern
         for subdir in filter(lambda x: re.match(pattern, x), foundSubdirs):
             bad_dir = re.match(excluded_pattern, subdir)
             if bad_dir:

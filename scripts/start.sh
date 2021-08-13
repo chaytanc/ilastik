@@ -42,6 +42,7 @@ cd $MY_PATH || die "Couldn't change dirs to where the script is"
 
 # Parse arguments and options (flags)
 
+noclean=false
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
 
