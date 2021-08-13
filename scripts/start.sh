@@ -78,38 +78,12 @@ remove_path_underscores
 # Transfer scp local files to Hyak
   # Login
 scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
-#XXX gets here successfully and performs scp if the uwid dir already exists
-#XXX getting "Connection Refused" and won't let me back in for a while -- manual scp and then ssh doesn't trigger
-# so maybe they have anti-bot stuff -- trying sleep
-#sleep 1
+#XXX make this part of a script that is only run once when first setting up Hyak account and add chmod +x command and ssh
+# Transfer hyak bootstrap script
+scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh into Hyak
-  # Login
-ssh "${uwid}@klone.hyak.uw.edu" || die "couldn't ssh in to Hyak"
-cd $hyakDir || die "Couldn't find $hyakDir"
-
-# Make expected file structure on the Hyak (ssh must have succeeded XXX put an exit in above if it didnt')
-#XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak
-userdir="$hyakDir$uwid"
-outdir="$userdir/out/"
-project_outdir="$outdir/$rootdir/"
-indir="$userdir/in/"
-project_indir="$indir/$rootdir/"
-
-dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
-for path in $dirtree
-do
-    mkdir "$path" || die "failed to uphold Hyak file structure invariant"
-done
-
-# Start run_batches.py
-if [ $noclean == true ]
-then
-#XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
-# sbatch runs computation on computation node
-    ./run_batches --noclean "$project_indir"
-else
-    ./run_batches "$project_indir"
-fi
+  # Login and run hyak bootstrap script
+ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${rootdir} ${hyakDir}" || die "couldn't ssh in to Hyak"
 
 
 # Check error status of run

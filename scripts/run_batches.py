@@ -29,7 +29,7 @@ global ARGS
 ARGS = None
 
 global BASEDIR
-BASEDIR = "/gscratch/scrubbed/freedman/ilastik"
+BASEDIR = "/gscratch/scrubbed/freedman/ilastik/"
 
 # Gets the command line arguments and returns them
 def parse_args():
@@ -70,20 +70,6 @@ def get_subdirs(rootdir):
         print(e)
         raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(rootdir))
     return subdirs
-
-#MOVED THIS TO START.SH instead
-# def make_file_structure(rootdir, uwid):
-#     #XXX working here to make file structure if it doesn't already exist, assuming this is run on Hyak
-#     userdir = os.path.join(BASEDIR, uwid)
-#     outdir = os.path.join(userdir, "out")
-#     project_outdir = os.path.join(outdir, rootdir)
-#     # NOTE: these two should already exist from the scp
-#     #projectroot = os.path.join(indir, rootdir)
-#     #indir = os.path.join(userdir, "in")
-#
-#     dirtree = [userdir, outdir, project_outdir]
-#     for path in dirtree:
-#         os.mkdir(path)
 
 def run_batches(subdirs):
     for subdir in subdirs:
