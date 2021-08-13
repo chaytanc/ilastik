@@ -69,12 +69,16 @@ def get_subdirs(rootdir):
     return subdirs
 
 def run_batches(subdirs):
+    exit_val = 0
     for subdir in subdirs:
         if ARGS.noclean:
             call = "./auto_ilastik.sh '%s'" % str(subdir)
         else:
             call = "./auto_ilastik.sh '%s' '%s'" % ("--noclean", str(subdir))
-        os.system(call)
+        temp_val = os.system(call)
+        if temp_val != 0:
+            exit_val = 1
+    return exit_val
 
 
 if __name__ == "__main__":
@@ -82,5 +86,6 @@ if __name__ == "__main__":
     print("args: ", ARGS)
     print("root: ", ARGS.rootdir)
     subdirs = get_subdirs(ARGS.rootdir)
-    run_batches(subdirs)
-    print("Success! Ran ilastik on all directories ", subdirs, " found.")
+    exit_val = run_batches(subdirs)
+    if exit_val == 0:
+        print("Success! Ran ilastik on all directories ", subdirs, " found.")
