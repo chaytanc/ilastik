@@ -17,6 +17,12 @@
 #     https://www.ilastik.org/documentation/basics/headless.html
 #XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
+# A func to kill the script and direct errors to stderr
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+
 # Parse arguments and options (flags)
 
 # Checks we have the proper number of arguments passed in
@@ -38,8 +44,11 @@ imagesDir=$1
 echo $imagesDir
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
 echo $newDir
-mv "$imagesDir" $newDir
-imagesDir=$newDir
+if [ $imagesDir -ne $newDir ]
+then
+    mv "$imagesDir" $newDir
+    imagesDir=$newDir
+fi
 
 #XXX get day of the project we're currently operating on
 day=$(basename $imagesDir)
