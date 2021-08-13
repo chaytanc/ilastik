@@ -44,7 +44,7 @@ imagesDir=$1
 echo $imagesDir
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
 echo $newDir
-if [ $imagesDir -ne $newDir ]
+if [ $imagesDir != $newDir ]
 then
     mv "$imagesDir" $newDir
     imagesDir=$newDir
@@ -124,6 +124,9 @@ do
 done
 IFS=$SAVEIFS
 echo "Done renaming"
+
+echo "No Spaces Images ${noSpacesImages}"
+echo "No Spaces Seg Images ${noSpacesSegImages}"
 
 # If you are processing more than one volume in a single command, provide all inputs of a given type in sequence:
 #--raw_data "my_grayscale_stack_1/*.png" "my_grayscale_stack_2/*.png" "my_grayscale_stack_3/*.png" \
