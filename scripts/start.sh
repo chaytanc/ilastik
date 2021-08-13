@@ -42,26 +42,10 @@ cd $MY_PATH || die "Couldn't change dirs to where the script is"
 
 # Parse arguments and options (flags)
 
-## While number of parameters passed is greater than 0, parse them
-#while [[ "$#" -gt 0 ]]; do
-#    case $1 in
-#        -n|--noclean) noclean=true;;
-#        -r|--rootdir) rootdir=$2; ;;
-#        -u|--uwid) uwid=$2; ;;
-#        *) echo "Unknown parameter passed: $1"; exit 1 ;;
-#    esac
-#    shift
-#done
-
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
-#check_args () {
-#  [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
-#}
-#check_args
 
-rootdir=$1
-uwid=$2
+#XXX copy this to auto_ilastik to parse noclean arg if it works here
 while getopts :n: flag
 do
     case "${flag}" in
@@ -72,11 +56,10 @@ done
 
 # Set up useful references
 noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
+rootdir=$1
+uwid=$2
 #XXX switch to not be in scrubbed once lab gets its own storage
 hyakDir="/gscratch/scrubbed/freedman/ilastik/"
-#rootdir=$1
-#uwid=$2
-#noclean=false
 
 remove_path_underscores () {
     # Rename all directories to have underscores instead of spaces, starting at rootdir
@@ -94,12 +77,14 @@ remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
-#XXX should we assume that this exists and is set up already?? --> YES
 scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 #XXX gets here successfully and performs scp if the uwid dir already exists
+#XXX getting "Connection Refused" and won't let me back in for a while -- manual scp and then ssh doesn't trigger
+# so maybe they have anti-bot stuff -- trying sleep
+#sleep 1
 # ssh into Hyak
   # Login
-ssh "{$uwid}@klone.hyak.uw.edu"
+ssh "${uwid}@klone.hyak.uw.edu" || die "couldn't ssh in to Hyak"
 cd $hyakDir || die "Couldn't find $hyakDir"
 
 # Make expected file structure on the Hyak (ssh must have succeeded XXX put an exit in above if it didnt')
@@ -120,6 +105,7 @@ done
 if [ $noclean == true ]
 then
 #XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
+# sbatch runs computation on computation node
     ./run_batches --noclean "$project_indir"
 else
     ./run_batches "$project_indir"
