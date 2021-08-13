@@ -74,7 +74,7 @@ def run_batches(subdirs):
         if ARGS.noclean:
             call = "./auto_ilastik.sh '%s'" % str(subdir)
         else:
-            call = "./auto_ilastik.sh '%s' '%s'" % ("--noclean", str(subdir))
+            call = "./auto_ilastik.sh '%s' '%s'" % ("-n", str(subdir))
         temp_val = os.system(call)
         if temp_val != 0:
             exit_val = 1
