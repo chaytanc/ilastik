@@ -97,7 +97,7 @@ echo "Done renaming"
 # ** Replace project="..." **
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
 #./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux ./run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
 	--output_format="tif" \
@@ -136,7 +136,7 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 # ** Replace project="..." **
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
 #./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux ./run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format="tif" \
