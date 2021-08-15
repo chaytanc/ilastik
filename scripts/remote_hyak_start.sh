@@ -6,6 +6,13 @@
 #     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
+#     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
+
+# A func to kill the script and direct errors to stderr
+die () {
+    echo >&2 "$@"
+    exit 1
+}
 
 # Parse arguments and options (flags)
 
@@ -24,17 +31,12 @@ done
 rootdir=$1
 rootdir=$(basename rootdir)
 hyakDir=$2
-
-# A func to kill the script and direct errors to stderr
-die () {
-    echo >&2 "$@"
-    exit 1
-}
+uwid=$3
 
 cd $hyakDir || die "Couldn't find $hyakDir"
 echo $(pwd)
 
-./check_file_strucuture.sh $hyakDir $rootdir
+./check_file_strucuture.sh $hyakDir $rootdir $uwid
 
 # Start run_batches.py
 cd ${hyakDir}/scripts/

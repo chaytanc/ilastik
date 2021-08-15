@@ -4,7 +4,13 @@
 #     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
+#     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 
+# A func to kill the script and direct errors to stderr
+die () {
+    echo >&2 "$@"
+    exit 1
+}
 
 #XXX todo test this script
 # Checks we have the proper number of arguments passed in
@@ -22,6 +28,7 @@ done
 rootdir=$1
 rootdir=$(basename rootdir)
 hyakDir=$2
+uwid=$3
 
 #XXX move this to setup_user.sh file that only runs once when user first joins
 # Also makes no sense to make these directories after doing scp -- should make before and then scp, so do prior approach
