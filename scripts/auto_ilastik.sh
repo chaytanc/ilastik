@@ -103,7 +103,7 @@ echo "Done renaming"
 	--output_format="tif" \
 	--output_filename_format="$outputDir/{nickname}.tif" \
 	--export_source="Probabilities" \
-	--raw_data=$noSpacesImages
+	--raw_data=$noSpacesImages \ || die "ilastik segmentation failed"
 
 # OBJECT DETECTION
 #NOTE: Put your model name under --project="../models/your_model.ilp"
@@ -143,7 +143,7 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 	--output_filename_format="$outputDir/{nickname}.tif" \
 	--export_source="Probabilities" \
   --raw_data=$noSpacesImages \
-  --segmentation_image=$noSpacesSegImages \
+  --segmentation_image=$noSpacesSegImages \ || die "ilastik object detection failed"
 
 #XXX run consolidate_csvs.py
 #XXX run format_data.py
