@@ -95,15 +95,24 @@ echo "Done renaming"
 #XXX not sure --raw_data $noSpacesImages works -- will have to test once disk quota is fixed
 #XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
-#/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
 #./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+#XXX locally debugging and testing to see if issue only arises on Hyak
+#~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
 /gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
-  --headless \
+   	--headless \
 	--project="../models/cyst_pixel_seg.ilp" \
-	--output_format="tif" \
+	--table_filename=/$outputDir/exported_object_features.csv \
 	--output_filename_format="$outputDir/{nickname}.tif" \
-	--export_source="Probabilities" \
-	--raw_data=$noSpacesImages \ || die "ilastik segmentation failed"
+	--output_format="tif" \
+	--export_source="probabilities" \
+	--raw_data $noSpacesImages
+#/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+#  --headless \
+#	--project="../models/cyst_pixel_seg.ilp" \
+#	--output_format="tif" \
+#	--output_filename_format="$outputDir/{nickname}.tif" \
+#	--export_source="Probabilities" \
+#	--raw_data=$noSpacesImages \ || die "ilastik segmentation failed"
 
 # OBJECT DETECTION
 #NOTE: Put your model name under --project="../models/your_model.ilp"
@@ -114,7 +123,7 @@ noSpacesSegImages=""
 # Determines field separators (ie spaces in file names should not separate fields)
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-outputImages=$(ls outputDir)
+outputImages=$(ls $outputDir) || die "can't find outputDir $outputDir"
 for file in $outputImages
 do
 	echo "Image: $file"
@@ -134,14 +143,13 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 #--raw_data "my_grayscale_stack_1/*.png" "my_grayscale_stack_2/*.png" "my_grayscale_stack_3/*.png" \
 #--segmentation_image my_unclassified_objects_1.h5/binary_segmentation_volume my_unclassified_objects_2.h5/binary_segmentation_volume my_unclassified_objects_3.h5/binary_segmentation_volume
 # ** Replace project="..." **
-#/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
 #./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
 /gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format="tif" \
 	--output_filename_format="$outputDir/{nickname}.tif" \
-	--export_source="Probabilities" \
+	--export_source="object predictions" \
   --raw_data=$noSpacesImages \
   --segmentation_image=$noSpacesSegImages \ || die "ilastik object detection failed"
 
