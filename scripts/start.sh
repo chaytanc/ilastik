@@ -46,7 +46,6 @@ noclean=false
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
 
-#XXX copy this to auto_ilastik to parse noclean arg if it works here
 while getopts :n: flag
 do
     case "${flag}" in
@@ -79,12 +78,10 @@ remove_path_underscores
 # Transfer scp local files to Hyak
   # Login
 scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
-#XXX make this part of a script that is only run once when first setting up Hyak account and add chmod +x command and ssh
-# Transfer hyak bootstrap script
-scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
+
 # ssh into Hyak
   # Login and run hyak bootstrap script
-ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${rootdir} ${hyakDir}" || die "couldn't ssh in to Hyak"
+ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir}" || die "couldn't ssh in to Hyak"
 
 
 # Check error status of run

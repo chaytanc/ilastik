@@ -33,24 +33,7 @@ die () {
 cd $hyakDir || die "Couldn't find $hyakDir"
 echo $(pwd)
 
-#XXX move this to setup_user.sh file that only runs once when user first joins
-# Also makes no sense to make these directories after doing scp -- should make before and then scp, so do prior approach
-# Make expected file structure on the Hyak (ssh must have succeeded)
-userdir="$hyakDir/$uwid"
-outdir="$userdir/out/"
-project_outdir="$outdir/$rootdir/"
-indir="$userdir/in/"
-project_indir="$indir/$rootdir/"
-
-#dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
-dirtree=( $project_outdir $project_indir )
-for path in $dirtree
-do
-    # -p flag makes it so it also makes intermediate nonexisting directories so we don't have to directly
-    # make indir and outdir anymore
-    mkdir -p "$path" || die "failed to uphold Hyak file structure invariant"
-    echo "made dir ${path}"
-done
+./check_file_strucuture.sh $hyakDir $rootdir
 
 # Start run_batches.py
 cd ${hyakDir}/scripts/

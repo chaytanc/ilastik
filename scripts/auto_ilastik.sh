@@ -55,6 +55,8 @@ day=$(basename $imagesDir)
 projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
 # A path to where we want to put all output images and csvs relative to the working directory
 # We go up three dirs (one for day, another for projectName, another for "in/", then we're in uwID)
+#XXX CHECK THIS -- enforce file structure invariant
+# up out of day X, rootdir, in, then into out, rootdir, day
 outputDir="$imagesDir/../../../out/$projectName/$day/"
 echo "outputDir: $outputDir"
 
@@ -96,7 +98,7 @@ echo "Done renaming"
 #XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_pixel_seg.ilp" \
 	--output_format="tif" \
@@ -113,7 +115,8 @@ noSpacesSegImages=""
 # Determines field separators (ie spaces in file names should not separate fields)
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
-for file in $outputDir
+outputImages=$(ls outputDir)
+for file in $outputImages
 do
 	echo "Image: $file"
 	newImage=$(echo $file | sed -e "s/ /_/g")
@@ -133,7 +136,7 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 #--segmentation_image my_unclassified_objects_1.h5/binary_segmentation_volume my_unclassified_objects_2.h5/binary_segmentation_volume my_unclassified_objects_3.h5/binary_segmentation_volume
 # ** Replace project="..." **
 #/gscratch/iscrm/freedman/ilastik/ilastik-1.3.3-Linux ./run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+./gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_format="tif" \
