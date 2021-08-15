@@ -81,6 +81,22 @@ def run_batches(subdirs):
     return exit_val
 
 
+#XXX working here to call consolidate and format after auto_ilastik output is in /out/day...
+#todo test
+def run_analysis(rootdir):
+    #XXX copied from auto_ilastik.sh -- need to make globals file or something
+    projectName = os.path.basename(rootdir)
+
+    # Outputs above the "day_X" output folders, so goes up above rootdir, in and down into out
+    outputDir = rootdir + "/../../out/" + projectName
+    #XXX could make this a parameter passed to run_batches...?
+    outputFilePath = outputDir + "/out.csv"
+    call = "python3 consolidate_csvs.py " + outputDir + " " + outputFilePath
+    os.system(call)
+    call = "python3 format_data.py " + outputFilePath
+    os.system.call(call)
+
+
 if __name__ == "__main__":
     ARGS = parse_args()
     print("args: ", ARGS)
@@ -89,3 +105,4 @@ if __name__ == "__main__":
     exit_val = run_batches(subdirs)
     if exit_val == 0:
         print("Success! Ran ilastik on all directories ", subdirs, " found.")
+        run_analysis(ARGS.rootdir)

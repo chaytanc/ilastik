@@ -4,12 +4,11 @@ import ntpath
 from pathlib import Path
 import re
 
-# XXX todo: does this work on windows and will I need it to do so if I run
-# on hyak instead of individual pcs
 ''' 
-USAGE: python3 consolidate_csvs.py {path to dir containing output csvs}
+USAGE: python3 consolidate_csvs.py {path to dir containing output csvs} {desired path to consolidated csv file}
     Ex:
-    python3 consolidate_csvs.py ~/Desktop/lab/freedman/cysts/object_det/output
+    XXX todo fix to have Hyak path instead of a local path
+    python3 consolidate_csvs.py ~/freedman/cysts/object_det/output ~/freedman/cysts/object_det/output/out.csv
     Useful commands: 
         pwd | sed 's/ /\\ /g' | pbcopy
         pbpaste | xargs python3 consolidate_csvs.py
@@ -135,6 +134,7 @@ def get_day_recursive(csv_file):
     return day
 
 
+# Checks up to 3 directories up for "day_X" folder; gives up after that
 def get_day_recursive_helper(csv_dir, height):
     split_path = os.path.split(csv_dir)
     # print("Split path: ", split_path)
@@ -197,10 +197,10 @@ def consolidate_csvs(csv_files, day):
     fout.close()  # closes output file
 
 
-# XXX WORKING HERE
-def consolidate_csvs_recursive(csv_files):
-    output_file = "out.csv"
-    fout = open(output_file, "a")
+#XXX todo make output_file_path parameter
+def consolidate_csvs_recursive(csv_files, out_path):
+    out_path = "out.csv"
+    fout = open(out_path, "a")
 
     header = _write_first_file(fout, csv_files)
 
@@ -229,14 +229,13 @@ def consolidate_csvs_recursive(csv_files):
                     fout.write(processed_line)
             f.close()  # not really needed, closes input file
 
-    print("Finished writing to output_file, ", output_file)
+    print("Finished writing to out_path, ", out_path)
     fout.close()  # closes output file
 
 
 # Modifies fout by adding the header and appending the filename to the
 # csv list of headers
 # Returns the header from the first file
-# def _write_first_file(fout, csv_files, day):
 def _write_first_file(fout, csv_files):
     # first file, gets the headers
     new_path = rename_file(csv_files[0])
@@ -268,12 +267,12 @@ def _process_line(csv, day, line):
 
 
 if __name__ == "__main__":
-    # for i, arg in enumerate(sys.argv):
     print("args: ", str(sys.argv))
     csv_dir = sys.argv[1]
+    out_path = sys.argv[2]
     # rename_files(csv_dir)
     # csvs = get_csvs(csv_dir)
     # day = get_day(csv_dir)
     # consolidate_csvs(csvs, day)
     csvs = get_csvs_recursive(csv_dir)
-    consolidate_csvs_recursive(csvs)
+    consolidate_csvs_recursive(csvs, out_path)

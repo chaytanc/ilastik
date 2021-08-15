@@ -1,7 +1,7 @@
 # This script is run on the Hyak periodically to check if the correct file structure is being used.
 # If directories that are presumed to exist do not, it creates them.
 # PARAMETERS:
-#     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
+#     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders -- should have no underscores
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
