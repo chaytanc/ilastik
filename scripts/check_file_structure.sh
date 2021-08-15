@@ -1,7 +1,7 @@
 # This script is run on the Hyak periodically to check if the correct file structure is being used.
 # If directories that are presumed to exist do not, it creates them.
 # PARAMETERS:
-#     rootdir:
+#     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
 
@@ -20,6 +20,7 @@ do
     esac
 done
 rootdir=$1
+rootdir=$(basename rootdir)
 hyakDir=$2
 
 #XXX move this to setup_user.sh file that only runs once when user first joins
