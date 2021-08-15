@@ -22,7 +22,6 @@ rootdir=$(basename rootdir)
 hyakDir=$2
 uwid=$3
 
-#XXX todo test this
 # Transfer hyak bootstrap script
 scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
 scp "./check_file_structure.sh" "${uwid}@klone.hyak.uw.edu:~/"

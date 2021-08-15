@@ -19,7 +19,6 @@ die () {
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 1 ] || die "1 argument required, $# provided"
 
-#XXX copy this to auto_ilastik to parse noclean arg if it works here
 noclean=false
 while getopts :n: flag
 do

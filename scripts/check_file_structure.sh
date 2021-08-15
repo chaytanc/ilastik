@@ -12,7 +12,6 @@ die () {
     exit 1
 }
 
-#XXX todo test this script
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided"
 
