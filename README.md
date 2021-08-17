@@ -19,7 +19,9 @@ You will find that each script in the scripts directory has a description of use
 preconditions at the top. You may find this useful.
 
 ## Example File Structure Invariant
-	https://docs.google.com/document/d/1YCYgpCBW-Xwt0J4izhmeNQ-nx0CYjY3vR8zGm_22LP8/edit
-	
-	file_invariant<img width="521" alt="image" src="https://user-images.githubusercontent.com/35582442/129658761-7421eeb4-fc2e-4979-ae47-408aac05ea38.png">
+--> In this example, the source folder of the raw images was called testRootDir   
+--> The source folder of raw images **must store images under "day X" folders**  
+--> The "chaytan" (replace with your UW NetID), "in" and "out" folders will be automatically created on the Hyak with the combination of the output of the setup_user.sh (one time setup) and start.sh scripts. The "in" folder will automatically contain a copy of the local raw data on the Hyak.
+
+<img width="521" alt="image" src="https://user-images.githubusercontent.com/35582442/129659207-e91befc9-bacc-443b-b5bf-92f1eae1136b.png">
 
