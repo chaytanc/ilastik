@@ -9,6 +9,7 @@
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 
 # A func to kill the script and direct errors to stderr
+
 die () {
     echo >&2 "$@"
     exit 1
