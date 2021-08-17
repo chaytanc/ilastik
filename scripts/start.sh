@@ -27,7 +27,6 @@
 # XXX Output will go to ./../out/??
 # It will consist of one output excel file summarizing the findings, unless --noclean is set.
 
-#https://stackoverflow.com/questions/14447406/bash-shell-script-check-for-a-flag-and-grab-its-value
 #cleanup
 
 # A func to kill the script and direct errors to stderr

@@ -1,6 +1,10 @@
 import unittest
 import os
 import filecmp
+import sys
+# insert at 1, 0 is the script path (or '' in REPL)
+sys.path.append('../')
+import consolidate_csvs as cc
 
 class TestConsolidateCsvs(unittest.TestCase):
 
@@ -18,25 +22,27 @@ class TestConsolidateCsvs(unittest.TestCase):
         self.outputDir = workingdir + "/out/" + projectname
         self.outputCSVPath = self.outputDir + "/out.csv"
         self.expected = "./expected_out.csv"
+        # Delete existing output before creating new
+        os.remove(self.outputCSVPath)
 
 
-    def tearDown(self):
-        # Remove output file made
-        # os.remove(self.outputCSVPath)
-        return
+    # def tearDown(self):
 
     # Check that for a given output directory with a known amount of csvs, consoldiate gets all the
     # desired output (all measurements and one header)
     # Inputs: (assumes that /out dir has segmentation already)
-        # 210616_1%_DMSO_day_0_b7_seg.tif
-        # 210616_1%_DMSO_day_0_c7_seg.tif
-        # 210616_1%_DMSO_day_0_d7_seg.tif
+        # 210616_1%_DMSO_day_0_b7_table.csv
+        # 210616_1%_DMSO_day_0_c7_table.csv
+        # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:
         # ./expected_out.csv (not sure if order of processing is same, but went alphabetical)
     def test_something(self):
-        call = "python3 ../consolidate_csvs.py " + self.outputDir + " " + self.outputCSVPath
-        os.system(call)
+        cc.main(self.outputDir, self.outputCSVPath)
+        # call = "python3 ../consolidate_csvs.py " + self.outputDir + " " + self.outputCSVPath
+        # os.system(call)
         os.system("cat " + self.outputCSVPath)
+        # Sort the rows because I'm not sure what order the rows should be in
+        os.system("diff <(sort {}) <(sort {})".format(self.expected, self.outputCSVPath))
         self.assertTrue(filecmp.cmp(self.expected, self.outputCSVPath))
 
 

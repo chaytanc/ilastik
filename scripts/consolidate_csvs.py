@@ -113,7 +113,6 @@ def get_day(csv_dir):
         split_again = os.path.split(split_path[0])
         grandparent_dir = split_again[1]
         print("Using grandparent ", grandparent_dir, " to find which day the images were taken")
-        # XXX put in an input check whether to continue processing or not
         day = find_number(grandparent_dir)
     if day == "":
         raise NameError("Neither the parent nor grandparent directory " +
@@ -197,7 +196,7 @@ def consolidate_csvs(csv_files, day):
     fout.close()  # closes output file
 
 
-#XXX todo make output_file_path parameter
+
 def consolidate_csvs_recursive(csv_files, out_path):
     # out_path = "out.csv"
     fout = open(out_path, "a")
@@ -205,7 +204,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
     header = _write_first_file(fout, csv_files)
 
     # Slicing out the first file that we manually wrote
-    other_files = csv_files[2:]
+    other_files = csv_files[1:]
     # now the rest, no headers:    
     for csv in other_files:
         new_csv_path = rename_file(csv)
@@ -220,12 +219,12 @@ def consolidate_csvs_recursive(csv_files, out_path):
             for line in f:
                 # Only write lines that are not the header
                 if line != header:
-                    print("line before \n", line)
+                    # print("line before \n", line)
                     # need to append filename to the csv output to the front
                     # also appends day column
                     # processed_line = ntpath.basename(csv) + "," + day + "," + line
                     processed_line = _process_line(csv, day, line)
-                    print("new line \n", processed_line)
+                    # print("new line \n", processed_line)
                     fout.write(processed_line)
             f.close()  # not really needed, closes input file
 
@@ -242,7 +241,6 @@ def _write_first_file(fout, csv_files):
     first_file = open(new_path)
     header = first_file.readline()
     # adding filename and day column to output
-    # new_header = "filename," + header
     new_header = "filename,day," + header
     print("new_header \n", new_header)
     fout.write(new_header)
@@ -266,6 +264,11 @@ def _process_line(csv, day, line):
     return processed_line
 
 
+def main(csv_dir, out_path):
+    csvs = get_csvs_recursive(csv_dir)
+    consolidate_csvs_recursive(csvs, out_path)
+
+
 if __name__ == "__main__":
     print("args: ", str(sys.argv))
     csv_dir = sys.argv[1]
@@ -274,5 +277,4 @@ if __name__ == "__main__":
     # csvs = get_csvs(csv_dir)
     # day = get_day(csv_dir)
     # consolidate_csvs(csvs, day)
-    csvs = get_csvs_recursive(csv_dir)
-    consolidate_csvs_recursive(csvs, out_path)
+    main(csv_dir, out_path)
