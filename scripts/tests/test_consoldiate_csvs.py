@@ -5,6 +5,7 @@ import sys
 # insert at 1, 0 is the script path (or '' in REPL)
 sys.path.append('../')
 import consolidate_csvs as cc
+import subprocess
 
 class TestConsolidateCsvs(unittest.TestCase):
 
@@ -40,10 +41,17 @@ class TestConsolidateCsvs(unittest.TestCase):
         cc.main(self.outputDir, self.outputCSVPath)
         # call = "python3 ../consolidate_csvs.py " + self.outputDir + " " + self.outputCSVPath
         # os.system(call)
+        print("Actual: \n")
         os.system("cat " + self.outputCSVPath)
+        print("Expected: \n")
+        os.system("cat " + self.expected)
         # Sort the rows because I'm not sure what order the rows should be in
-        os.system("diff <(sort {}) <(sort {})".format(self.expected, self.outputCSVPath))
-        self.assertTrue(filecmp.cmp(self.expected, self.outputCSVPath))
+        #XXX working here to do process substitution
+        # subprocess.run(["diff", "<(sort {})", "<(sort {})"].format(self.expected, self.outputCSVPath))
+        # subprocess.run(["diff", "<(sort {})".format(self.expected), "<(sort {})".format(self.outputCSVPath)])
+        exit = os.system("./compare_output.sh {} {}".format(self.expected, self.outputCSVPath))
+        # self.assertTrue(filecmp.cmp(self.expected, self.outputCSVPath))
+        self.assertEqual(exit, 0)
 
 
 if __name__ == '__main__':
