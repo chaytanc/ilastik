@@ -10,7 +10,7 @@
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
-#   rootdir: This is the path to the folder containing "day X" folders which contain the raw images of organoids.
+#   rootdir: This is the local path to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
 #   uwid: Your Hyak-authorized UW netID. Do not include "@uw.edu" in this argument.
@@ -78,7 +78,7 @@ remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
-scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/${noSpacesDir}/in/"
 
 # ssh into Hyak
   # Login and run hyak bootstrap script

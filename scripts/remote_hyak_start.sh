@@ -17,13 +17,13 @@ die () {
 # Parse arguments and options (flags)
 
 # Checks we have the proper number of arguments passed in
-[ "$#" -ge 1 ] || die "1 argument required, $# provided"
+[ "$#" -ge 3 ] || die "3 argument required, $# provided"
 
 noclean=false
 while getopts :n: flag
 do
     case "${flag}" in
-        n) noclean=true;;
+        n) noclean=true; shift;;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done

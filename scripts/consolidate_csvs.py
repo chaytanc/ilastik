@@ -199,7 +199,7 @@ def consolidate_csvs(csv_files, day):
 
 #XXX todo make output_file_path parameter
 def consolidate_csvs_recursive(csv_files, out_path):
-    out_path = "out.csv"
+    # out_path = "out.csv"
     fout = open(out_path, "a")
 
     header = _write_first_file(fout, csv_files)

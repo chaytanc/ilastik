@@ -19,6 +19,7 @@
 
 # A func to kill the script and direct errors to stderr
 die () {
+    # Print the given error message to stderr and then exit
     echo >&2 "$@"
     exit 1
 }
@@ -56,6 +57,8 @@ projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
 # We go up three dirs (one for day, another for projectName, another for "in/", then we're in uwID)
 #XXX CHECK THIS -- enforce file structure invariant
 # up out of day X, rootdir, in, then into out, rootdir, day
+# NOTE: check_file_structure.sh enforces up to the project name dir, and under that will be created when
+# we run ilastik if those dirs do not already exist
 outputDir="$imagesDir/../../../out/$projectName/$day/"
 echo "outputDir: $outputDir"
 
@@ -85,7 +88,7 @@ do
   noSpacesImages="$noSpacesImages $imagesDir/$newImage "
 done
 IFS=$SAVEIFS
-echo "Done renaming"
+echo "Done renaming raw data"
 
 
 # PIXEL SEGMENTATION
@@ -118,8 +121,10 @@ IFS=$(echo -en "\n\b")
 outputImages=$(ls $outputDir) || die "can't find outputDir $outputDir"
 for file in $outputImages
 do
+  echo "seg file: ${file}"
   # Check that it is a segmentation image / not some prior object detection
-  if [[ $image =~ "seg" ]]
+  # (by checking that it contains the substring "seg" which we append to the file name in segmentation)
+  if [[ "${file}" =~ .*"seg".* ]]
   then
       echo "Image: $file"
       newImage=$(echo $file | sed -e "s/ /_/g")
@@ -130,7 +135,13 @@ do
   fi
 done
 IFS=$SAVEIFS
-echo "Done renaming"
+
+# Check that the files were found where we expected them and we were able to parse them
+if [[ $noSpacesSegImages == "" ]]
+then
+  die "Cannot find output segmentation images in auto_ilastik.sh"
+fi
+echo "Done renaming segmentation images"
 
 echo "No Spaces Images ${noSpacesImages}"
 echo "No Spaces Seg Images ${noSpacesSegImages}"
@@ -148,17 +159,10 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
   --prediction_maps $noSpacesSegImages \
   --raw_data $noSpacesImages
 
-python3 consolidate_csvs.py $outputDir "${outputDir}/"
-python3 format_data.py
-#XXX run consolidate_csvs.py
-#XXX run format_data.py
-# Transfer excel output back to local computer??
-#XXX run cleanup script (base on flag parameter passed in)
-
 # Check error status of run
 if [ $(echo $?) == "0" ] 
 then
-	echo "Ilastik ran on the images successfully!"
+	echo "auto_ilastik.sh ran on the images successfully!"
 else
-	echo "Failure! check the log files in home directory (~/ilastik_log.txt)??"
+	echo "auto_ilastik.sh failure! check the log files in home directory (~/ilastik_log.txt)??"
 fi

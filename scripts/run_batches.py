@@ -31,6 +31,7 @@ ARGS = None
 global BASEDIR
 BASEDIR = "/gscratch/scrubbed/freedman/ilastik/"
 
+
 # Gets the command line arguments and returns them
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -55,7 +56,6 @@ def get_subdirs(rootdir):
                 print("skipping dir: ", subdir)
             else:
                 print("good dir: ", subdir)
-                #XXX need to make sure we append full path from rootdir to subdir
                 # Adds root so we get the full relative path
                 subdirs.append(root + subdir)
 
@@ -67,6 +67,7 @@ def get_subdirs(rootdir):
         print(e)
         raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(rootdir))
     return subdirs
+
 
 def run_batches(subdirs):
     exit_val = 0
@@ -87,14 +88,17 @@ def run_analysis(rootdir):
     #XXX copied from auto_ilastik.sh -- need to make globals file or something
     projectName = os.path.basename(rootdir)
 
-    # Outputs above the "day_X" output folders, so goes up above rootdir, in and down into out
+    # Want to output above the "day_X" output folders, so goes up above and rootdir and in, and down into out/
     outputDir = rootdir + "/../../out/" + projectName
-    #XXX could make this a parameter passed to run_batches...?
-    outputFilePath = outputDir + "/out.csv"
-    call = "python3 consolidate_csvs.py " + outputDir + " " + outputFilePath
+    outputCSVPath = outputDir + "/out.csv"
+    outputFormattedPath = outputDir + "/out.xlsx"
+    # NOTE: multiple calls to consolidate_csvs.py without deleting out.csv will continually append
+    call = "python3 consolidate_csvs.py " + outputDir + " " + outputCSVPath
     os.system(call)
-    call = "python3 format_data.py " + outputFilePath
-    os.system.call(call)
+    call = "python3 format_data.py " + outputCSVPath + " " + outputFormattedPath
+    os.system(call)
+    #XXX cleanup script
+    #XXX transfer output files back to local computer??
 
 
 if __name__ == "__main__":
@@ -105,4 +109,6 @@ if __name__ == "__main__":
     exit_val = run_batches(subdirs)
     if exit_val == 0:
         print("Success! Ran ilastik on all directories ", subdirs, " found.")
+        print("Running analysis...")
         run_analysis(ARGS.rootdir)
+        print("Analysis done!")
