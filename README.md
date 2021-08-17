@@ -20,5 +20,6 @@ preconditions at the top. You may find this useful.
 
 ## Example File Structure Invariant
 	https://docs.google.com/document/d/1YCYgpCBW-Xwt0J4izhmeNQ-nx0CYjY3vR8zGm_22LP8/edit
+	
 	file_invariant<img width="521" alt="image" src="https://user-images.githubusercontent.com/35582442/129658761-7421eeb4-fc2e-4979-ae47-408aac05ea38.png">
 
