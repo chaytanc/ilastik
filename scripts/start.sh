@@ -79,7 +79,7 @@ remove_path_underscores
 # Transfer scp local files to Hyak
   # Login
 echo "Transferring your local files..."
-scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/${noSpacesDir}/in/"
+scp -r $noSpacesDir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 
 # ssh into Hyak
   # Login and run hyak bootstrap script
