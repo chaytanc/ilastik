@@ -99,8 +99,8 @@ echo "Done renaming raw data"
 #XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
 #XXX locally debugging and testing to see if issue only arises on Hyak
-#/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
-~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
+#~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
    	--headless \
     --project="../models/cyst_pixel_seg.ilp" \
     --table_filename=$outputDir/exported_object_features.csv \
@@ -149,8 +149,8 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 # CAUTION: when constructing these commands, make sure there is no equal sign after the raw_data or prediction_maps
     # arguments -- if there is that means it expects only one string argument instead of many images!
 # ** Replace project="..." **
-#/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
-~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
+#~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
+/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_filename_format="$outputDir/{nickname}_obj.tif" \

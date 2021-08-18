@@ -27,15 +27,15 @@ do
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
+#XXX NEED PATH not basename
 rootdir=$1
-rootdir=$(basename rootdir)
 hyakDir=$2
 uwid=$3
 
 cd $hyakDir || die "Couldn't find $hyakDir"
 echo $(pwd)
 
-./check_file_strucuture.sh $hyakDir $rootdir $uwid
+./check_file_structure.sh $hyakDir $rootdir $uwid
 
 # Start run_batches.py
 cd ${hyakDir}/scripts/
@@ -43,7 +43,7 @@ if [ $noclean == true ]
 then
 #XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
 # sbatch runs computation on computation node
-    ./run_batches.py --noclean "$project_indir"
+    ./run_batches.py --noclean "$rootdir"
 else
-    ./run_batches.py "$project_indir"
+    ./run_batches.py "$rootdir"
 fi

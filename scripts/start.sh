@@ -54,8 +54,8 @@ do
 done
 
 # Set up useful references
-noSpacesDir=$(echo $rootdir | sed -e "s/ /_/g")
 rootdir=$1
+noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
 #XXX switch to not be in scrubbed once lab gets its own storage
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
@@ -66,10 +66,9 @@ remove_path_underscores () {
     workingDir=$(pwd)
     cd $rootdir || die "couldn't cd to rootdir"
     cd ".."
-    #XXX mv doesn't work for some reason right now
     for d in $(find . -name '*_*' -type d) ; do
         echo "dir: $d"
-        new=$(echo "${d}" | sed -e 's/_/ /g')
+        new=$(echo "${d}" | sed -e 's/ /_/g')
         mv "${d}" $new
         echo "new dir: $new"
     done
@@ -85,8 +84,8 @@ scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/${noSpacesDir}/in/
 # ssh into Hyak
   # Login and run hyak bootstrap script
 echo "Starting the pipeline on the Hyak..."
+echo "no spaces dir $noSpacesDir"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
-
 
 # Check error status of run
 if [ $(echo $?) == "0" ] 
