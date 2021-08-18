@@ -57,7 +57,7 @@ def get_subdirs(rootdir):
             else:
                 print("good dir: ", subdir)
                 # Adds root so we get the full relative path
-                subdirs.append(root + subdir)
+                subdirs.append(root + "/" + subdir + "/")
 
     # Check that there was at least one directory found
     try:
