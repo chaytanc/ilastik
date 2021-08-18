@@ -10,7 +10,7 @@
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
-#   rootdir: This is the local path to the folder containing "day X" folders which contain the raw images of organoids.
+#   rootdir: This is the local PATH to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
 #   uwid: Your Hyak-authorized UW netID. Do not include "@uw.edu" in this argument.
@@ -43,7 +43,7 @@ cd $MY_PATH || die "Couldn't change dirs to where the script is"
 
 noclean=false
 # Checks we have the proper number of arguments passed in
-[ "$#" -ge 2 ] || die "2 arguments required, $# provided"
+[ "$#" -ge 2 ] || die "2 arguments required, $# provided, start.sh"
 
 while getopts :n: flag
 do
@@ -66,9 +66,11 @@ remove_path_underscores () {
     workingDir=$(pwd)
     cd $rootdir || die "couldn't cd to rootdir"
     cd ".."
+    #XXX mv doesn't work for some reason right now
     for d in $(find . -name '*_*' -type d) ; do
-        new=$(echo $d | sed -e 's/_/ /g')
-        mv $d $new
+        echo "dir: $d"
+        new=$(echo "${d}" | sed -e 's/_/ /g')
+        mv "${d}" $new
         echo "new dir: $new"
     done
     cd $workingDir
@@ -77,11 +79,13 @@ remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
+echo "Transferring your local files..."
 scp -r $rootdir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/${noSpacesDir}/in/"
 
 # ssh into Hyak
   # Login and run hyak bootstrap script
-ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir}" || die "couldn't ssh in to Hyak"
+echo "Starting the pipeline on the Hyak..."
+ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 
 
 # Check error status of run

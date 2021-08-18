@@ -27,7 +27,7 @@ die () {
 # Parse arguments and options (flags)
 
 # Checks we have the proper number of arguments passed in
-[ "$#" -ge 1 ] || die "1 arguments required, $# provided"
+[ "$#" -ge 1 ] || die "1 arguments required, $# provided, auto_ilastik.sh"
 
 noclean=false
 while getopts :n: flag

@@ -17,7 +17,7 @@ die () {
 # Parse arguments and options (flags)
 
 # Checks we have the proper number of arguments passed in
-[ "$#" -ge 3 ] || die "3 argument required, $# provided"
+[ "$#" -ge 3 ] || die "3 arguments required, $# provided, remote_hyak_start.sh"
 
 noclean=false
 while getopts :n: flag

@@ -16,7 +16,7 @@ die () {
 }
 
 # Checks we have the proper number of arguments passed in
-[ "$#" -ge 2 ] || die "2 arguments required, $# provided"
+[ "$#" -ge 2 ] || die "2 arguments required, $# provided, check_file_structure.sh"
 
 noclean=false
 while getopts :n: flag
@@ -55,8 +55,8 @@ do
     fi
 done
 echo "File structure invariant is good, working dir: $(pwd)"
-if [ $didnotexist ]
-then
-    echo >&2 "Some directory in the file structure invariant did not exist and was made"
-    exit 3
-fi
+#if [ $didnotexist ]
+#then
+#    echo >&2 "Some directory in the file structure invariant did not exist and was made"
+#    exit 0
+#fi
