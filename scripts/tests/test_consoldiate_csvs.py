@@ -1,11 +1,8 @@
 import unittest
 import os
-import filecmp
 import sys
-# insert at 1, 0 is the script path (or '' in REPL)
 sys.path.append('../')
 import consolidate_csvs as cc
-import subprocess
 
 class TestConsolidateCsvs(unittest.TestCase):
 
@@ -24,10 +21,9 @@ class TestConsolidateCsvs(unittest.TestCase):
         self.outputCSVPath = self.outputDir + "/out.csv"
         self.expected = "./expected_out.csv"
         # Delete existing output before creating new
-        os.remove(self.outputCSVPath)
+        if os.path.exists(self.outputPath):
+            os.remove(self.outputCSVPath)
 
-
-    # def tearDown(self):
 
     # Check that for a given output directory with a known amount of csvs, consoldiate gets all the
     # desired output (all measurements and one header)

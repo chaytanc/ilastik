@@ -40,7 +40,7 @@ done
 
 imagesDir=$1
 
-#XXX should move this up the chain / enforce earlier in pipeline
+#XXX This should be redundant because we do a find rename in start.sh that robustly removes spaces
 # Rename imagesDir passed to have no underscores
 echo $imagesDir
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
