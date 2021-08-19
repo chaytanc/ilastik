@@ -25,3 +25,7 @@ preconditions at the top. You may find this useful.
 
 <img width="521" alt="image" src="https://user-images.githubusercontent.com/35582442/129659207-e91befc9-bacc-443b-b5bf-92f1eae1136b.png">
 
+## Video Tutorials
+One-Time Setup: https://youtu.be/rlr7TK4ywJY
+Typical Analysis Run: https://youtu.be/up1MHTRvY0c
+
