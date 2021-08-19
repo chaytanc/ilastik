@@ -19,6 +19,10 @@ adds them to one csv as rows.  It adds a column called "filename" and a col
 called "day". It renames all files in the directory to use underscores
 rather than spaces. 
 This script ignores the csv file "out\.*.csv"
+It appends filename, day columns to each csv processed. For example, an image titled 
+210616_1%_DMSO_day_0_c7_table.csv
+has 210616_1%_DMSO_day_0_c7_table.csv,0 appended to the START of each row so that the first and second column
+correspond to filename,day
 
 PRECONDITIONS:
 It assumes all the csvs in the directory given have the same column labels (first row of the file).

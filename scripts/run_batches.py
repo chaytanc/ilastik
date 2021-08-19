@@ -76,6 +76,7 @@ def run_batches(subdirs):
             call = "./auto_ilastik.sh '%s'" % str(subdir)
         else:
             call = "./auto_ilastik.sh '%s' '%s'" % ("-n", str(subdir))
+        print("\n CALLING ", call, "\n")
         temp_val = os.system(call)
         if temp_val != 0:
             exit_val = 1

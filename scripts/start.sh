@@ -86,6 +86,8 @@ scp -r $noSpacesDir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 echo "Starting the pipeline on the Hyak..."
 echo "no spaces dir $noSpacesDir"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+# Transfer output files back to local
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakDir}/${uwid}/out/ ../${uwid}/out/"
 
 # Check error status of run
 if [ $(echo $?) == "0" ] 

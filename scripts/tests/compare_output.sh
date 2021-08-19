@@ -2,7 +2,7 @@
 
 expected=$1
 outputCSVPath=$2
-diff <(sort {expected}) <(sort ${outputCSVPath})
+diff <(sort ${expected}) <(sort ${outputCSVPath})
 ret=$?
 if [[ $ret -eq 0 ]]; then
     echo "no differences"
