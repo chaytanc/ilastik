@@ -74,7 +74,6 @@ def get_csvs(csv_dir):
     # Checks post condition that some csv files were found
     try:
         file1 = csv_files[0]
-        print("First csv file: " + str(file1))
     except FileNotFoundError:
         raise FileNotFoundError("Could not find any csv files in ", csv_dir)
 
@@ -92,13 +91,12 @@ def get_csvs_recursive(csv_dir):
         # print("csv stem: ", csv.stem)
         bad_csv = re.match(excluded_pattern, csv.stem)
         if bad_csv:
-            print("skipping csv: ", csv.stem)
+            print("Not consolidating ", csv.stem)
         else:
             # print("good csv: ", csv.stem)
             csv_files.append(csv)
     try:
         file1 = csv_files[0]
-        print("First csv file: " + str(file1))
     except FileNotFoundError:
         raise FileNotFoundError("Could not find any csv files in " + str(csv_dir))
     return csv_files
@@ -108,7 +106,6 @@ def get_csvs_recursive(csv_dir):
 # where the images are located, not above it
 def get_day(csv_dir):
     parent_dir = os.path.basename(csv_dir)
-    print("Parent dir: ", parent_dir)
     day = find_number(parent_dir)
     # Check grandparent if we don't find parent number
     if day == "":
@@ -140,7 +137,6 @@ def get_day_recursive(csv_file):
 # Checks up to 3 directories up for "day_X" folder; gives up after that
 def get_day_recursive_helper(csv_dir, height):
     split_path = os.path.split(csv_dir)
-    # print("Split path: ", split_path)
     parent_dir = split_path[1]
     day = find_number(parent_dir)
     # Check grandparent if we don't find parent number
@@ -272,13 +268,16 @@ def main(csv_dir, out_path):
     csvs = get_csvs_recursive(csv_dir)
     consolidate_csvs_recursive(csvs, out_path)
 
-
-if __name__ == "__main__":
-    print("args: ", str(sys.argv))
-    csv_dir = sys.argv[1]
-    out_path = sys.argv[2]
+    # Non recursive main:
     # rename_files(csv_dir)
     # csvs = get_csvs(csv_dir)
     # day = get_day(csv_dir)
     # consolidate_csvs(csvs, day)
+
+
+if __name__ == "__main__":
+    # print("args: ", str(sys.argv))
+    csv_dir = sys.argv[1]
+    out_path = sys.argv[2]
+
     main(csv_dir, out_path)

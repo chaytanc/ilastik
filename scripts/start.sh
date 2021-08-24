@@ -6,6 +6,7 @@
 # you for the password and 2FA.
 #
 # INPUT / PARAMETERS:
+#XXX todo fix noclean / test
 #   --noclean: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
@@ -24,7 +25,9 @@
 # OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
 # It's better this way, trust me.
-# XXX Output will go to ./../out/??
+#XXX assumes this local path exists -- do we enforce this with the invariant?
+#XXX do a mkdir??
+# Output will be copied back to the local path ./../{uwid}/out/{rootname}
 # It will consist of one output excel file summarizing the findings, unless --noclean is set.
 
 #cleanup
@@ -67,10 +70,9 @@ remove_path_underscores () {
     cd $rootdir || die "couldn't cd to rootdir"
     cd ".."
     for d in $(find . -name '*_*' -type d) ; do
-        echo "dir: $d"
         new=$(echo "${d}" | sed -e 's/ /_/g')
         mv "${d}" $new
-        echo "new dir: $new"
+        echo "New dir without underscores: $new"
     done
     cd $workingDir
 }
@@ -87,7 +89,9 @@ echo "Starting the pipeline on the Hyak..."
 #echo "no spaces dir $noSpacesDir"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 # Transfer output files back to local
-scp -r "${uwid}@klone.hyak.uw.edu:/${hyakDir}/${uwid}/out/ ../${uwid}/out/"
+#XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
+noSpacesName=$(basename $noSpacesDir)
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakDir}/${uwid}/out/${noSpacesDir}" "../${uwid}/out/${noSpacesName}"
 
 # Check error status of run
 if [ $(echo $?) == "0" ] 

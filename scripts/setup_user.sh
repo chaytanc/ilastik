@@ -3,9 +3,7 @@
 # This script sets up a user on the Hyak with the necessary files and structure to run start.sh automatically.
 # It only needs to be run once per user; only before the first time they ever want to run start.sh
 # PARAMETERS:
-#XXX todo consolidate these parameters into just passing in the absolute path to the rootdir from the hyak
-#     XXX fix rootdir definition in all other sh files
-#     rootdir: the dir name which contains raw images in "day X" folders, ie "experiment1"
+#     rootname: the dir name (not path) which contains raw images in "day X" folders, ie "experiment1"
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
@@ -17,8 +15,8 @@ die () {
     exit 1
 }
 
-rootdir=$1
-rootdir=$(basename rootdir)
+rootname=$1
+rootname=$(basename rootname)
 hyakDir=$2
 uwid=$3
 
@@ -26,4 +24,4 @@ uwid=$3
 scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
 scp "./check_file_structure.sh" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure
-ssh "${uwid}@klone.hyak.uw.edu" "./check_file_structure.sh ${rootdir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak"
+ssh "${uwid}@klone.hyak.uw.edu" "./check_file_structure.sh ${rootname} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak"

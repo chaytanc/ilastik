@@ -1,7 +1,7 @@
 # This script is run on the Hyak periodically to check if the correct file structure is being used.
 # If directories that are presumed to exist do not, it creates them.
 # PARAMETERS:
-#     rootdir: name of the dir containing raw images in "day X" folders -- should have no spaces
+#     rootname: name of the dir containing raw images in "day X" folders -- should have no spaces
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
 #         If using this script for testing, perhaps on a local machine, pass in the user directory
@@ -26,20 +26,19 @@ do
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
-rootdir=$1
-rootdir=$(basename $rootdir)
+rootname=$1
+rootname=$(basename $rootname)
 hyakDir=$2
 uwid=$3
 
 userdir="$hyakDir/$uwid"
 outdir="$userdir/out/"
-project_outdir="$outdir/$rootdir/"
+project_outdir="$outdir/$rootname/"
 indir="$userdir/in/"
-project_indir="$indir/$rootdir/"
+project_indir="$indir/$rootname/"
 
 #dirtree=( $userdir $outdir $project_outdir $indir $project_indir )
 dirtree=( $project_outdir $project_indir )
-didnotexist=false
 for path in $dirtree
 do
     if [[ -d "$path" ]]
@@ -51,12 +50,7 @@ do
         # make indir and outdir anymore
         mkdir -p "$path" || die "failed to uphold Hyak file structure invariant"
         echo "made dir ${path}"
-        didnotexist=true
     fi
 done
 echo "File structure invariant is good, working dir: $(pwd)"
-#if [ $didnotexist ]
-#then
-#    echo >&2 "Some directory in the file structure invariant did not exist and was made"
-#    exit 0
-#fi
+

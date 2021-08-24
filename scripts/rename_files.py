@@ -20,7 +20,7 @@ def rename_files(csv_dir):
 
 
 if __name__ == "__main__":
-    print("args: ", str(sys.argv))
+    # print("args: ", str(sys.argv))
     csv_dir = sys.argv[1]
     rename_files(csv_dir)
     print("Success! damn those pesky spaces")

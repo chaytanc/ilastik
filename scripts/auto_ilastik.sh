@@ -3,13 +3,13 @@
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:
-#     imagesDir: This is the path to the folder titled "day X" relative to where this script is being run.
+#     imagesDir: This is the path to the folder of input images titled "day X" relative to where this script is being run.
 #        It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
 #     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
-#     the imagesDir passed in should have a corresponding dir in .../uwID/out/imagesDir
+#     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDir
 # EFFECTS:
-#     Output will go to ./../out/rootdir/day_X.
+#     Output will go to ./../out/imagesDir/day_X.
 #     It will consist of probability images from pixel segmentation, detected object images
 #     from object detection, and csv measurement and analysis from object detection,
 #     as well as one output excel file summarizing the findings.
@@ -41,10 +41,9 @@ done
 imagesDir=$1
 
 #XXX This should be redundant because we do a find rename in start.sh that robustly removes spaces
-# Rename imagesDir passed to have no underscores
-echo $imagesDir
+#todo remove and test if output is different (assuming the output was ever good??)
+# Rename imagesDir passed to have no underscores -- since start.sh already removes spaces, this is likely redundant
 newDir=$(echo $imagesDir | sed -e "s/ /_/g")
-echo $newDir
 if [ $imagesDir != $newDir ]
 then
     mv "$imagesDir" $newDir
@@ -60,18 +59,13 @@ projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
 # NOTE: check_file_structure.sh enforces up to the project name dir, and under that will be created when
 # we run ilastik if those dirs do not already exist
 outputDir="$imagesDir/../../../out/$projectName/$day/"
-echo "outputDir: $outputDir"
+echo "Outputting to $outputDir"
 
 # Stores a list of all the images we're processing
 images=$(ls "$imagesDir")
-echo "Dir: "
-echo $imagesDir
-echo "IMAGES: "
-echo $(ls "$imagesDir")
-echo "day: "
-echo $day
-echo "projectName: "
-echo $projectName
+echo "Input from $imagesDir"
+echo "day: $day"
+echo "Project name: $projectName"
 
 #NOTE: ilastik has an error which requires NO SPACES in files,
 # even if in quotes
@@ -81,7 +75,6 @@ SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 for image in $images
 do
-  echo "Image: $image"
   newImage=$(echo $image | sed -e "s/ /_/g")
   cp "$imagesDir/$image" "$imagesDir/$newImage"
   echo "New file name: $newImage"
@@ -121,15 +114,13 @@ IFS=$(echo -en "\n\b")
 outputImages=$(ls $outputDir) || die "can't find outputDir $outputDir"
 for file in $outputImages
 do
-  echo "seg file: ${file}"
   # Check that it is a segmentation image / not some prior object detection
   # (by checking that it contains the substring "seg" which we append to the file name in segmentation)
   if [[ "${file}" =~ .*"seg".* ]]
   then
-      echo "Image: $file"
       newImage=$(echo $file | sed -e "s/ /_/g")
       cp "$outputDir/$file" "$outputDir/$newImage"
-      echo "New file name: $newImage"
+      echo "New segmentation file name: $newImage"
       # Appends the renamed image to the list of images
       noSpacesSegImages="$noSpacesSegImages $outputDir/$newImage "
   fi
