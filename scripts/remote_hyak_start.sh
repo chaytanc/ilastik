@@ -5,7 +5,8 @@
 # PARAMETERS:
 #     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
 #     hyakDir: The directory to the freedman lab files under which your user files are located
-#         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
+#         Ex: hyakDir = /gscratch/freedman/ilastik/, if file invariant is followed,
+#             this directory will also contain /gscratch/freedman/ilastik/user
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 
 # A func to kill the script and direct errors to stderr
@@ -27,14 +28,13 @@ do
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
-#XXX NEED PATH not basename
 rootdir=$1
 hyakDir=$2
 uwid=$3
 
+# Go to working directory and check file structure invariant
 cd $hyakDir || die "Couldn't find $hyakDir"
-echo $(pwd)
-
+pwd
 ./check_file_structure.sh $hyakDir $rootdir $uwid
 
 # Start run_batches.py

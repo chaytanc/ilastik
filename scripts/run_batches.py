@@ -26,6 +26,7 @@ PRECONDITIONS:
 global ARGS
 ARGS = None
 
+#XXX not used
 global BASEDIR
 BASEDIR = "/gscratch/scrubbed/freedman/ilastik/"
 
@@ -80,7 +81,6 @@ def run_batches(subdirs):
 
 
 def run_analysis(imagesdir):
-    #XXX copied from auto_ilastik.sh -- need to make globals file or something
     projectName = os.path.basename(imagesdir)
 
     # Want to output above the "day_X" output folders, so goes up above and imagesdir and in, and down into out/
@@ -92,7 +92,6 @@ def run_analysis(imagesdir):
     os.system(call)
     call = "python3 format_data.py " + outputCSVPath + " " + outputFormattedPath
     os.system(call)
-    #XXX cleanup script
 
 
 if __name__ == "__main__":

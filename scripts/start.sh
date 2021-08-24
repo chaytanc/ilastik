@@ -4,6 +4,8 @@
 # It measures and analyzes the detected organoids, outputting the results in an excel file. Run this from your
 # local computer, it will copy your local files to the Hyak and ssh automatically, though it will still prompt
 # you for the password and 2FA.
+# It will also scp the segmentation images, object detection images, and formatted excel file back to the local
+# output directory (assumes the file structure is enforced locally).
 #
 # INPUT / PARAMETERS:
 #XXX todo fix noclean / test
@@ -19,8 +21,9 @@
 # PRECONDITIONS:
 #     1) Have a UW NetID that is authorized to login to the Hyak.(If this is not the case, contact
 #         benof@uw.edu to request to gain access).
-#     2) getopts, is downloaded on the Hyak
+#     2) getopts is downloaded on the Hyak
 #     3) .../freedman/ilastik/uwid directory is set up / have been added as a freedman user
+#     4) Current working directory is /gscratch/scrubbed/freedman/ilastik
 #
 # OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
@@ -28,9 +31,9 @@
 #XXX assumes this local path exists -- do we enforce this with the invariant?
 #XXX do a mkdir??
 # Output will be copied back to the local path ./../{uwid}/out/{rootname}
-# It will consist of one output excel file summarizing the findings, unless --noclean is set.
-
-#cleanup
+# Cleanup:
+# Output on the Hyak is automatically deleted except for the formatted excel file (only after this output has been
+# copied back over)
 
 # A func to kill the script and direct errors to stderr
 die () {
@@ -63,6 +66,7 @@ uwid=$2
 #XXX switch to not be in scrubbed once lab gets its own storage
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
 hyakDir="/gscratch/scrubbed/freedman/ilastik/"
+#hyakDir="/gscratch/iscrm/freedman/ilastik/"
 
 remove_path_underscores () {
     # Rename all directories to have underscores instead of spaces, starting at rootdir
@@ -74,7 +78,7 @@ remove_path_underscores () {
         mv "${d}" $new
         echo "New dir without underscores: $new"
     done
-    cd $workingDir
+    cd $workingDir || die "Couldn't change dirs to ${workingDir}"
 }
 remove_path_underscores
 
@@ -91,7 +95,12 @@ ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir
 # Transfer output files back to local
 #XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
 noSpacesName=$(basename $noSpacesDir)
-scp -r "${uwid}@klone.hyak.uw.edu:/${hyakDir}/${uwid}/out/${noSpacesDir}" "../${uwid}/out/${noSpacesName}"
+hyakOutDir="${hyakDir}/${uwid}/out/${noSpacesDir}/"
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}" "../${uwid}/out/${noSpacesName}" || die "could not transfer Hyak output to local computer, start.sh"
+# ssh to Hyak, run cleanup script
+echo "Cleaning up Hyak files..."
+ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.sh ${hyakDir} ${noSpacesName} ${uwid}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+
 
 # Check error status of run
 if [ $(echo $?) == "0" ] 
