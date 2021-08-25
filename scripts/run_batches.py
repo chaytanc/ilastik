@@ -9,7 +9,6 @@ This script will run Ilastik object detection using auto_ilastik.sh on all sub d
 USAGE: python3 run_batches.py /gscratch/iscrm/freedman/my_images
     ARGS: 
         imagesdir: path (on Hyak) to the dir containing raw images in "day X" folders
-        uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
     FLAGS: 
         --noclean will run auto_ilastik.sh without deleting the intermediate files made.
         Ex: python3 run_batches.py --no-clean "../in/my_cyst_images/"
@@ -36,14 +35,14 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--noclean", action="store_true", help="does not automatically remove excess files from Ilastik output")
     parser.add_argument("imagesdir", help="path to the directory containing 'day X' folders of raw images")
-    # parser.add_argument("uwid", help="the UW NetID of the Hyak user for these batches")
     return parser.parse_args()
 
 
 # Gets all directories under imagesdir that contain "day" or "Day"
 def get_subdirs(imagesdir):
     subdirs = []
-    # Excludes strings matching out.*\.csv regex pattern
+    # Excludes strings matching out.* regex pattern so we don't analyze the output directory (hopefully...)
+    #XXX todo test -- maybe this is why we're getting that index error
     excluded_pattern = re.compile(r'out.*')
     # Recurse through subdirs and get those that match day or Day pattern
     pattern = r'[(day)(Day)]'
@@ -59,7 +58,7 @@ def get_subdirs(imagesdir):
 
     # Check that there was at least one directory found
     try:
-        dir1 = subdirs[0]
+        subdirs[0]
     except IndexError as e:
         print(e)
         raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(imagesdir))
@@ -81,16 +80,17 @@ def run_batches(subdirs):
 
 
 def run_analysis(imagesdir):
-    projectName = os.path.basename(imagesdir)
+    project_name = os.path.basename(imagesdir)
 
-    # Want to output above the "day_X" output folders, so goes up above and imagesdir and in, and down into out/
-    outputDir = imagesdir + "/../../out/" + projectName
-    outputCSVPath = outputDir + "/out.csv"
-    outputFormattedPath = outputDir + "/out.xlsx"
+    # Want to output in the output dir for the given project,
+    # so we go up above and "imagesdir" and "in", and down into "out"
+    outputdir = imagesdir + "/../../out/" + project_name
+    output_csv_path = outputdir + "/out.csv"
+    output_formatted_path = outputdir + "/out.xlsx"
     # NOTE: multiple calls to consolidate_csvs.py without deleting out.csv will continually append
-    call = "python3 consolidate_csvs.py " + outputDir + " " + outputCSVPath
+    call = "python3 consolidate_csvs.py " + outputdir + " " + output_csv_path
     os.system(call)
-    call = "python3 format_data.py " + outputCSVPath + " " + outputFormattedPath
+    call = "python3 format_data.py " + output_csv_path + " " + output_formatted_path
     os.system(call)
 
 

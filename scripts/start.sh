@@ -8,11 +8,13 @@
 # output directory (assumes the file structure is enforced locally).
 #
 # INPUT / PARAMETERS:
-#XXX todo fix noclean / test
+#XXX todo fix noclean / test (also getopts doesn't support long options...
 #   --noclean: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
+#   --notransfer: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
+#       have already transferred before mostly.
 #   rootdir: This is the local PATH to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
@@ -28,9 +30,7 @@
 # OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
 # It's better this way, trust me.
-#XXX assumes this local path exists -- do we enforce this with the invariant?
-#XXX do a mkdir??
-# Output will be copied back to the local path ./../{uwid}/out/{rootname}
+# Output will be copied back to the local path ./../{uwid}/out/{rootname} (assuming file invariant is locally upheld)
 # Cleanup:
 # Output on the Hyak is automatically deleted except for the formatted excel file (only after this output has been
 # copied back over)
@@ -51,10 +51,11 @@ noclean=false
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided, start.sh"
 
-while getopts :n: flag
+while getopts :n:t: flag
 do
     case "${flag}" in
         n) noclean=true; shift;;
+        t) notransfer=true; shift;;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
@@ -84,8 +85,14 @@ remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
-echo "Transferring your local files..."
-scp -r $noSpacesDir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+# If the -t flag is not set, transfer
+if [[ $notransfer == "" ]]
+then
+    echo "Transferring your local files..."
+    scp -r $noSpacesDir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+else
+    echo "Skipping file transfer..."
+fi
 
 # ssh into Hyak
   # Login and run hyak bootstrap script
@@ -96,12 +103,13 @@ ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir
 #XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
 noSpacesName=$(basename $noSpacesDir)
 #hyakOutDir="${hyakDir}/${uwid}/out/${noSpacesName}/"
-hyakOutDir="${hyakDir}/${noSpacesDir}/"
+hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/"
 localOutDir="${noSpacesDir}/../../out/"
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
-ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.sh ${hyakDir} ${noSpacesName} ${uwid}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+#ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.sh ${hyakDir} ${noSpacesName} ${uwid}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.sh ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 
 
 # Check error status of run

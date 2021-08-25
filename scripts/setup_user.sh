@@ -26,6 +26,7 @@ uwid=$3
 
 # Transfer hyak bootstrap script
 #XXX todo make duo mobile remember user so less 2FA
+# Can use  ssh keygen, would need script to do it automatically and not sure if this eliminates need for 2fa
 #https://duo.com/docs/remembered-devices
 scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
 scp "./check_file_structure.sh" "${uwid}@klone.hyak.uw.edu:~/"
