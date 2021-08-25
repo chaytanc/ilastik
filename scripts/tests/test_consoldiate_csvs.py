@@ -21,7 +21,7 @@ class TestConsolidateCsvs(unittest.TestCase):
         self.outputCSVPath = self.outputDir + "/out.csv"
         self.expected = "./expected_out.csv"
         # Delete existing output before creating new
-        if os.path.exists(self.outputPath):
+        if os.path.exists(self.outputCSVPath):
             os.remove(self.outputCSVPath)
 
 
@@ -33,7 +33,7 @@ class TestConsolidateCsvs(unittest.TestCase):
         # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:
         # ./expected_out.csv (not sure if order of processing is same, but went alphabetical)
-    def test_something(self):
+    def test_output(self):
         cc.main(self.outputDir, self.outputCSVPath)
         print("Actual: \n")
         os.system("cat " + self.outputCSVPath)

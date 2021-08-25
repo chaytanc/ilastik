@@ -85,7 +85,7 @@ def get_csvs(csv_dir):
 def get_csvs_recursive(csv_dir):
     csv_files = []
     # Excludes strings matching out.*\.csv regex pattern
-    excluded_pattern = re.compile(r'out.*')
+    excluded_pattern = re.compile(r'.*out.*')
     # csv_files = [csv for csv in Path(csv_dir).rglob('*.csv')]
     for csv in Path(csv_dir).rglob('*.csv'):
         # print("csv stem: ", csv.stem)

@@ -2,6 +2,8 @@
 
 # This script sets up a user on the Hyak with the necessary files and structure to run start.sh automatically.
 # It only needs to be run once per user; only before the first time they ever want to run start.sh
+# PRECONDITIONS:
+#     Run this from your local scripts directory (where start.sh is kept)
 # PARAMETERS:
 #XXX todo swap these params so hyakdir comes first and do the same for check_file_structure
 #     rootname: the dir name (not path) which contains raw images in "day X" folders, ie "experiment1"
@@ -18,7 +20,7 @@ die () {
 }
 
 rootname=$1
-rootname=$(basename rootname)
+rootname=$(basename $rootname)
 hyakDir=$2
 uwid=$3
 

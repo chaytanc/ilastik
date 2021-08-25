@@ -95,8 +95,10 @@ ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir
 # Transfer output files back to local
 #XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
 noSpacesName=$(basename $noSpacesDir)
-hyakOutDir="${hyakDir}/${uwid}/out/${noSpacesDir}/"
-scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}" "../${uwid}/out/${noSpacesName}" || die "could not transfer Hyak output to local computer, start.sh"
+#hyakOutDir="${hyakDir}/${uwid}/out/${noSpacesName}/"
+hyakOutDir="${hyakDir}/${noSpacesDir}/"
+localOutDir="${noSpacesDir}/../../out/"
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.sh ${hyakDir} ${noSpacesName} ${uwid}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
