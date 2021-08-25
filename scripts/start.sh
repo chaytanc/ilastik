@@ -104,10 +104,10 @@ ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir
 noSpacesName=$(basename $noSpacesDir)
 hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/"
 localOutDir="${noSpacesDir}/../../out/"
-scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
-ssh "${uwid}@klone.hyak.uw.edu" "./cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 
 
 # Check error status of run
