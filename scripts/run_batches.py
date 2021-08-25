@@ -72,6 +72,7 @@ def run_batches(subdirs):
             call = "./auto_ilastik.sh '%s'" % str(subdir)
         else:
             call = "./auto_ilastik.sh '%s' '%s'" % ("-n", str(subdir))
+        #XXX why is this run after os.system(call)??
         print("\n CALLING ", call, "\n")
         temp_val = os.system(call)
         if temp_val != 0:

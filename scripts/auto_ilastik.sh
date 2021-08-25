@@ -3,19 +3,21 @@
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:
-#     imagesDir: This is the path to the folder of input images titled "day X" relative to where this script is being run.
-#        It should contain only raw images that you intend to process with ilastik.
+#     imagesDir: This is the path to the folder of input images which is titled "day X".
+#       It is relative to where this script is being run.
+#       It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
 #     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
 #     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDir
+#     assumes this script is run as "./auto_ilastik.sh ...params" (in other words, that this script is run while in
+#         the scripts directory, and not called from a higher dir)
 # EFFECTS:
-#     Output will go to ./../out/imagesDir/day_X.
+#     Output will go to your local ./../out/projectName/day_X.
 #     It will consist of probability images from pixel segmentation, detected object images
 #     from object detection, and csv measurement and analysis from object detection,
 #     as well as one output excel file summarizing the findings.
 # REFERENCES:
 #     https://www.ilastik.org/documentation/basics/headless.html
-#XXX This output may get cleaned up later using cleanup.sh, leaving only the excel file output.
 
 # A func to kill the script and direct errors to stderr
 die () {
@@ -29,11 +31,11 @@ die () {
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 1 ] || die "1 arguments required, $# provided, auto_ilastik.sh"
 
-noclean=false
-while getopts :n: flag
+while getopts :n:t: flag
 do
     case "${flag}" in
         n) noclean=true; shift;;
+        t) test=true; shift;;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
@@ -54,8 +56,6 @@ day=$(basename $imagesDir)
 projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))
 # A path to where we want to put all output images and csvs relative to the working directory
 # We go up three dirs (one for day, another for projectName, another for "in/", then we're in uwID)
-#XXX CHECK THIS -- enforce file structure invariant
-# up out of day X, rootdir, in, then into out, rootdir, day
 # NOTE: check_file_structure.sh enforces up to the project name dir, and under that will be created when
 # we run ilastik if those dirs do not already exist
 outputDir="$imagesDir/../../../out/$projectName/$day/"
@@ -91,9 +91,15 @@ echo "Done renaming raw data"
 #XXX need to install ilastik in freedman and chaytan directories
 #XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
-#XXX locally debugging and testing to see if issue only arises on Hyak
 #~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+if [[ $test == "" ]]
+then
+    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh "
+else
+    #NOTE: for debugging off the Hyak, insert your local path to ilastik here and use the -t flag
+    ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh"
+fi
+$ilastikStart \
    	--headless \
     --project="../models/cyst_pixel_seg.ilp" \
     --table_filename=$outputDir/exported_object_features.csv \
@@ -140,8 +146,7 @@ echo "No Spaces Seg Images ${noSpacesSegImages}"
 # CAUTION: when constructing these commands, make sure there is no equal sign after the raw_data or prediction_maps
     # arguments -- if there is that means it expects only one string argument instead of many images!
 # ** Replace project="..." **
-#~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
-/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh \
+$ilastikStart \
   --headless \
 	--project="../models/cyst_object_det3.ilp" \
 	--output_filename_format="$outputDir/{nickname}_obj.tif" \
