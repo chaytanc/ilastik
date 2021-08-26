@@ -1,5 +1,28 @@
 #!/bin/bash
 
+## SBATCH account and partition setup XXX are these comments necessary for sbatch to work?
+#SBATCH --account=iscrm
+#SBATCH --partition=compute-hugemem
+
+## working directory for this job:
+##XXX this may be incorrect dir for sbatch
+#SBATCH --chdir=/gscratch/scrubbed/freedman/ilastik/scripts
+
+## allocation:
+## nodes: # of nodes
+## ntasks-per-node: # cores per node
+## mem: ram
+## time: max running time
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --signal=USR2
+#SBATCH --ntasks=28
+#SBATCH --mem=120G
+
+## email
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=chaytan@uw.edu
+
 # This script has all the commands that are needed to bootstrap the object detection and analysis on the Hyak.
 # It should be piped to an ssh command such that these commands are run on the Hyak.
 # PARAMETERS:
@@ -45,5 +68,7 @@ then
 # sbatch runs computation on computation node
     ./run_batches.py --noclean "$rootdir"
 else
-    ./run_batches.py "$rootdir"
+  #XXX working here to test srun and sbatch in start.sh
+#    ./run_batches.py "$rootdir"
+    srun python3 run_batches.py "${rootdir}"
 fi

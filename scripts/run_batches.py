@@ -84,6 +84,7 @@ def run_analysis(imagesdir):
     # Want to output in the output dir for the given project,
     # so we go up above and "imagesdir" and "in", and down into "out"
     outputdir = imagesdir + "/../../out/" + project_name
+    #NOTE: this is where we set output file names??
     output_csv_path = outputdir + "/out.csv"
     output_formatted_path = outputdir + "/out.xlsx"
     # NOTE: multiple calls to consolidate_csvs.py without deleting out.csv will continually append

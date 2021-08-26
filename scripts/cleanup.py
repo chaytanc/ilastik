@@ -39,7 +39,6 @@ def delete_hyak_files(output_dir):
             for subroot, _, subfiles in os.walk(os.path.join(root, subdir)):
                 # Get files under day X dir that end in csv or tif and aren't output file
                 to_delete = filter(lambda x: re.match(pattern, x), subfiles)
-                print(to_delete)
                 for file in to_delete:
                     bad_file = re.match(excluded_pattern, file)
                     if bad_file:
