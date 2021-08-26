@@ -30,7 +30,6 @@ class TestFormatData(unittest.TestCase):
             os.remove(self.output_path)
 
 
-    #XXX testing adding support for to_csv  if output_path contains csv
     # Check that for a given consolidated csv of data, we get the expected xlsx file back
     # Inputs: (assumes that /out dir has segmentation already)
         # expected_out.csv

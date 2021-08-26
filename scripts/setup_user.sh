@@ -11,7 +11,7 @@
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 # EFFECTS:
-# Copies over remote_hyak_start.sh, check_file_structure.sh, and cleanup.sh, then sshes and runs check_file_structure.sh
+# Copies over remote_hyak_start.sh, check_file_structure.sh, and cleanup.py, then sshes and runs check_file_structure.sh
 
 # A func to kill the script and direct errors to stderr
 die () {

@@ -5,11 +5,19 @@ from pathlib import Path
 import re
 
 ''' 
-USAGE: python3 consolidate_csvs.py {path to dir containing output csvs} {desired path to consolidated csv file}
+This script takes all csvs below the given outputdir and consolidates them into one csv with n+1 rows where
+n is the number of csvs consolidated (there is a header row). The consolidated csv file path and filename is 
+determined by the second parameter given. This script may be run locally or on the Hyak, but will be run on the
+Hyak if run by the start.sh pipeline. It does not consolidate csv files with "out" anywhere in the name.
+
+PARAMETERS: 
+    outputdir: the path to the directory which contains csvs output from object detection
+    ouputpath: the path of the destination of the consolidated csv file, including filename
+    
+USAGE: python3 consolidate_csvs.py {outputdir} {outputpath}
     Ex:
-    XXX todo fix to have Hyak path instead of a local path
-    python3 consolidate_csvs.py ~/freedman/cysts/object_det/output ~/freedman/cysts/object_det/output/out.csv
-    Useful commands: 
+    python3 consolidate_csvs.py /gscratch/scrubbed/freedman/uwid/out/testDir/ /gscratch/scrubbed/freedman/uwid/out/testDir/out.csv
+    Potentially useful commands: 
         pwd | sed 's/ /\\ /g' | pbcopy
         pbpaste | xargs python3 consolidate_csvs.py
 
@@ -18,10 +26,10 @@ This script takes the many individual output csvs from a given folder and
 adds them to one csv as rows.  It adds a column called "filename" and a col
 called "day". It renames all files in the directory to use underscores
 rather than spaces. 
-This script ignores the csv file "out\.*.csv"
+This script ignores the csv file ".*out.*csv"
 It appends filename, day columns to each csv processed. For example, an image titled 
-210616_1%_DMSO_day_0_c7_table.csv
-has 210616_1%_DMSO_day_0_c7_table.csv,0 appended to the START of each row so that the first and second column
+"210616_1%_DMSO_day_0_c7_table.csv"
+has "210616_1%_DMSO_day_0_c7_table.csv,0" appended to the START of each row so that the first and second column
 correspond to filename,day
 
 PRECONDITIONS:
@@ -30,14 +38,13 @@ It assumes the directory containing the csvs is labeled with the day number,
 typically as "/other directories/day 1/...csv files".
 It assumes the parent directory named with the day has NO other numbers in the name.
 It assumes the output of ilastik is stored in CSVS and that the output of formatting the data
-is a .xlsx or any file that is NOT a csv that might get stored under the root directory passed in to this script.
+is a .xlsx or any file that will not be processed / consolidated by this script.
 In other words, it assumes there are no csvs under the directory passed as an argument that are not wanted
 in the analysis of ilastik output. (HINT: perhaps store this and other formatting scripts in a directory called "scripts"
 somewhere above the root of your cystic images)
 
 OUTPUT:
-The output is stored as out_{day}.csv in the directory from which this script was
-run.
+The output is stored as the file specified by outputpath.
 '''
 
 

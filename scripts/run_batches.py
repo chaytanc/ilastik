@@ -3,7 +3,6 @@ import os
 import re
 import argparse
 
-
 '''
 This script will run Ilastik object detection using auto_ilastik.sh on all sub dirs in the given directory.
 USAGE: python3 run_batches.py /gscratch/iscrm/freedman/my_images
@@ -11,13 +10,13 @@ USAGE: python3 run_batches.py /gscratch/iscrm/freedman/my_images
         imagesdir: path (on Hyak) to the dir containing raw images in "day X" folders
     FLAGS: 
         --noclean will run auto_ilastik.sh without deleting the intermediate files made.
-        Ex: python3 run_batches.py --no-clean "../in/my_cyst_images/"
+        Ex: python3 run_batches.py --noclean "../in/my_cyst_images/"
         
-XXX MOVED file structure building TO START.SH
 EFFECTS:
-    This script makes the file structure where input and output are stored on the Hyak, ie making 
-    a directory for the UW NetID given under the .../freedman/ilastik directory on the Hyak, as well as 
-    ...uwid/in and ...uwid/out directories and copying imagesdir to ...uwid/in/imagesdir
+    Pixel segmentation and object detection run by auto_ilastik.sh will be run on all "day X" folders in the
+    given imagesdir. The result are tifs and csvs representing object detection output in the
+    hyakDir/uwid/out/rootname/ folder on the Hyak.
+    
 PRECONDITIONS:
     This script must be run on the Hyak.
 '''
@@ -42,8 +41,7 @@ def parse_args():
 def get_subdirs(imagesdir):
     subdirs = []
     # Excludes strings matching out.* regex pattern so we don't analyze the output directory (hopefully...)
-    #XXX todo test -- maybe this is why we're getting that index error
-    excluded_pattern = re.compile(r'out.*')
+    excluded_pattern = re.compile(r'.*out.*')
     # Recurse through subdirs and get those that match day or Day pattern
     pattern = r'[(day)(Day)]'
     for root, foundSubdirs, files in os.walk(imagesdir):

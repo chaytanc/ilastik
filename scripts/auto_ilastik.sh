@@ -8,7 +8,7 @@
 #       It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
 #     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
-#     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDir
+#     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDirName
 #     assumes this script is run as "./auto_ilastik.sh ...params" (in other words, that this script is run while in
 #         the scripts directory, and not called from a higher dir)
 # EFFECTS:
@@ -41,16 +41,6 @@ do
 done
 
 imagesDir=$1
-
-#XXX This should be redundant because we do a find rename in start.sh that robustly removes spaces
-#todo remove and test if output is different (assuming the output was ever good??)
-# Rename imagesDir passed to have no underscores -- since start.sh already removes spaces, this is likely redundant
-newDir=$(echo $imagesDir | sed -e "s/ /_/g")
-if [ $imagesDir != $newDir ]
-then
-    mv "$imagesDir" $newDir
-    imagesDir=$newDir
-fi
 
 day=$(basename $imagesDir)
 projectName=$(basename $(echo $imagesDir | sed -e "s/$day//"))

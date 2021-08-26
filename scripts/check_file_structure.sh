@@ -7,6 +7,10 @@
 #         If using this script for testing, perhaps on a local machine, pass in the user directory
 #         containing the project name dir, and then in/ and out/ dirs.
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
+# EFFECTS:
+#    This script makes the file structure where input and output are stored on the Hyak, ie making
+#    a directory for the uwid given under the hyakDir directory on the Hyak, as well as
+#    ...uwid/in and ...uwid/out directories
 
 # A func to kill the script and direct errors to stderr
 

@@ -21,7 +21,6 @@ class TestFormatData(unittest.TestCase):
         self.output_csv = self.outputDir + "/out.csv"
         self.output_path = self.outputDir + "/formatted_out.csv"
         self.expected = "./expected_formatted.csv"
-        #XXX need to cp the files and make sure they exist to be removed at the start of each test
         call = "cp " + self.outputDir + "/../test_data/* " + self.outputDir + "/day_0/"
         os.system(call)
 
@@ -38,7 +37,6 @@ class TestFormatData(unittest.TestCase):
     #XXX should also probably chekc that no files we want to keep in higher folders are deleted on accident
     def test_cleanup(self):
         cu.main(self.outputDir)
-        # os.system("./cleanup.sh " + self.outputDir)
         # Look through files of outputDir and if any are csvs or tifs in day X folders that are also not an output file
         # then we have not removed all the desired files
         for root, foundSubdirs, files in os.walk(self.outputDir):
