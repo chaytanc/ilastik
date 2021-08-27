@@ -84,7 +84,7 @@ echo "Done renaming raw data"
 #~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
 if [[ $test == "" ]]
 then
-    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.3.3post3-Linux/run_ilastik.sh "
+    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.4.0b15-Linux/run_ilastik.sh "
 else
     #NOTE: for debugging off the Hyak, insert your local path to ilastik here and use the -t flag
     ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh"
