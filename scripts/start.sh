@@ -85,7 +85,7 @@ remove_path_underscores
 
 # Transfer scp local files to Hyak
   # Login
-# If the -t flag is not set, transfer
+# If the -t flag is not set, transfer files over
 if [[ $notransfer == "" ]]
 then
     echo "Transferring your local files..."
@@ -97,8 +97,10 @@ fi
 # ssh into Hyak
   # Login and run hyak bootstrap script
 echo "Starting the pipeline on the Hyak..."
-#XXX working here to get sbatch running instead of directly calling
-ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+#XXX sbatch currently works but is very slow and hides stdout so not using. Also
+# it does not fix the obj detection issue
+#ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 # Transfer output files back to local
 #XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
 noSpacesName=$(basename $noSpacesDir)
@@ -109,11 +111,11 @@ scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "cou
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 
-
+#XXX no exit status since we sshed
 # Check error status of run
-if [ $(echo $?) == "0" ] 
-then
-	echo "Ilastik ran on the images successfully!"
-else
-	echo "Failure! check the log files in home directory (~/ilastik_log.txt)??"
-fi
+#if [ $(echo $?) == "0" ]
+#then
+#	echo "Ilastik ran on the images successfully!"
+#else
+#	echo "Failure! check the log files in home directory (~/ilastik_log.txt)??"
+#fi

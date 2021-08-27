@@ -142,7 +142,7 @@ $ilastikStart \
 	--output_filename_format="$outputDir/{nickname}_obj.tif" \
   --output_format="tif" \
 	--table_filename="$outputDir/{nickname}.csv" \
-  --prediction_maps $noSpacesSegImages \
+  --segmentation_image $noSpacesSegImages \
   --raw_data $noSpacesImages
 
 # Check error status of run

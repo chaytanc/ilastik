@@ -69,6 +69,6 @@ then
     ./run_batches.py --noclean "$rootdir"
 else
   #XXX working here to test srun and sbatch in start.sh
-#    ./run_batches.py "$rootdir"
-    srun python3 run_batches.py "${rootdir}"
+    ./run_batches.py "$rootdir"
+#    srun python3 run_batches.py "${rootdir}"
 fi
