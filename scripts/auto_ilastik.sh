@@ -131,7 +131,7 @@ fi
 echo "Done renaming segmentation images"
 
 echo "No Spaces Images ${noSpacesImages}"
-echo "No Spaces Seg Images for object detection input ${noSpacesSegImages}"
+echo "\n No Spaces Seg Images for object detection input ${noSpacesSegImages}"
 
 # CAUTION: when constructing these commands, make sure there is no equal sign after the raw_data or prediction_maps
     # arguments -- if there is that means it expects only one string argument instead of many images!
@@ -142,8 +142,8 @@ $ilastikStart \
 	--output_filename_format="$outputDir/{nickname}_obj.tif" \
   --output_format="tif" \
 	--table_filename="$outputDir/{nickname}.csv" \
-	--probability_maps $noSpacesImages \
-  --raw_data $noSpacesImages
+  --raw_data $noSpacesImages \
+	--prediction_maps $noSpacesSegImages
 
 # Check error status of run
 if [ $(echo $?) == "0" ] 
