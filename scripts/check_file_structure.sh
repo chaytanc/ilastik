@@ -1,5 +1,7 @@
 # This script is run on the Hyak periodically to check if the correct file structure is being used.
-# If directories that are presumed to exist do not, it creates them.
+# (See File Strucutre Invariant Documentation or the README for more information)
+# If directories that are presumed to exist do not, it creates them. For example,
+# if there is no "/out/rootname" directory under the hyakDir/uwid path, then it is created.
 # PARAMETERS:
 #     rootname: name of the dir containing raw images in "day X" folders -- should have no spaces
 #     hyakDir: The directory to the freedman lab files under which your user files are located
@@ -13,7 +15,6 @@
 #    ...uwid/in and ...uwid/out directories
 
 # A func to kill the script and direct errors to stderr
-
 die () {
     echo >&2 "$@"
     exit 1
