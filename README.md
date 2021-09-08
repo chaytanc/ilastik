@@ -9,7 +9,7 @@
 	2.3) Starts ML processing scripts  
 	2.4) Analyzes the output  
 	2.5) Cleans up extra files left on Hyak (can be turned off, but do be courteous and clean up files!)  
-3) Move your output excel file back to your computer (may later be automatic)  
+NOTE: You will have to type in your NetID password many times as well as do 2FA quite a bit. This is expected due to Hyak access restrictions on ssh.  
 
 You are able to use models that are not the defaults provided to analyze your images.
 You may do so by transferring your model files to /gscratch/iscrm/freedman/ilastik/models
