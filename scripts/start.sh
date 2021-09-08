@@ -23,9 +23,8 @@
 # PRECONDITIONS:
 #     1) Have a UW NetID that is authorized to login to the Hyak.(If this is not the case, contact
 #         benof@uw.edu to request to gain access).
-#     2) getopts is downloaded on the Hyak
-#     3) .../freedman/ilastik/uwid directory is set up / have been added as a freedman user
-#     4) Current working directory is /gscratch/scrubbed/freedman/ilastik
+#     2) .../freedman/ilastik/uwid directory is set up / have been added as a freedman user
+#     3) Current working directory is /gscratch/scrubbed/freedman/ilastik
 #
 # OUTPUT / EFFECTS:
 # All files in the given directory will be renamed to use underscores instead of spaces.
@@ -105,17 +104,10 @@ ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir
 #XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
 noSpacesName=$(basename $noSpacesDir)
 hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/"
+#XXX want to put in the same place as output from
 localOutDir="${noSpacesDir}/../../out/"
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 
-#XXX no exit status since we sshed
-# Check error status of run
-#if [ $(echo $?) == "0" ]
-#then
-#	echo "Ilastik ran on the images successfully!"
-#else
-#	echo "Failure! check the log files in home directory (~/ilastik_log.txt)??"
-#fi
