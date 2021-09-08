@@ -36,6 +36,7 @@ Aug. 19 2021: https://docs.google.com/presentation/d/1t2_UBNMZtbM7VbJMtYXJt2JeuK
 Ilastik Model Training Details: https://docs.google.com/document/d/1znWy9IdjHWWbI4t7tmr7bd7ny6agfQomOq-TpLebyLM/edit?usp=sharing  
 Hyak Environment Setup: https://docs.google.com/document/d/1KQDwg4GJw9Nw_sEUWvbM072UghmKq1Amq_hwJXi1ryg/edit?usp=sharing  
 Ilastik Model Training and "By Hand" Method Details: https://docs.google.com/document/d/1JDehptQJb-okzQRx_Ty2cPFCU_NRoqwVJCRtEk8YVFw/edit?usp=sharing  
+Standard File Naming Convention: https://docs.google.com/document/d/1Hrn7xmbiiVGniBQ8X8yr9IEx_727qR8H/edit  
 
 
 
