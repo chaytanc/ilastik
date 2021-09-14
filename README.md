@@ -37,6 +37,7 @@ Ilastik Model Training Details: https://docs.google.com/document/d/1znWy9IdjHWWb
 Hyak Environment Setup: https://docs.google.com/document/d/1KQDwg4GJw9Nw_sEUWvbM072UghmKq1Amq_hwJXi1ryg/edit?usp=sharing  
 Ilastik Model Training and "By Hand" Method Details: https://docs.google.com/document/d/1JDehptQJb-okzQRx_Ty2cPFCU_NRoqwVJCRtEk8YVFw/edit?usp=sharing  
 Standard File Naming Convention: https://docs.google.com/document/d/1Hrn7xmbiiVGniBQ8X8yr9IEx_727qR8H/edit  
+Transferring Models to the Hyak: https://docs.google.com/document/d/1UPf58aQaBBOidGMZmWsRPX1V8In49qSf1lQ-AkhDK5I/edit?usp=sharing  
 
 
 
