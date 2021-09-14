@@ -64,11 +64,10 @@ pwd
 cd ${hyakDir}/scripts/
 if [ $noclean == true ]
 then
-#XXX how to do sbatch with python instead of shell?    sbatch run_batches.py
-# sbatch runs computation on computation node
+# sbatch runs computation on computation node -- is currently way to slow to use
+# srun python3 run_batches.py --noclean "${rootdir}"
     ./run_batches.py --noclean "$rootdir"
 else
-  #XXX working here to test srun and sbatch in start.sh
     ./run_batches.py "$rootdir"
 #    srun python3 run_batches.py "${rootdir}"
 fi

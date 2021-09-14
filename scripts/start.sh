@@ -13,7 +13,7 @@
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
-#   --notransfer: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
+#   --notransfer or -t: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
 #       have already transferred before mostly.
 #   rootdir: This is the local PATH to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
@@ -73,11 +73,20 @@ remove_path_underscores () {
     workingDir=$(pwd)
     cd $rootdir || die "couldn't cd to rootdir"
     cd ".."
-    for d in $(find . -name '*_*' -type d) ; do
-        new=$(echo "${d}" | sed -e 's/ /_/g')
-        mv "${d}" $new
-        echo "New dir without underscores: $new"
+#    for d in $(find . -name '*_*' -type d) ; do
+#        new=$(echo "${d}" | sed -e 's/ /_/g')
+#        mv "${d}" $new
+#        echo "New dir without underscores: $new"
+#    done
+    find . -depth -name '* *' \
+    | while IFS= read -r f ;
+    do
+      echo "Old dir with underscores: $f"
+      new="$(dirname "$f")/$(basename "$f"|tr ' ' _)"
+      mv -i "$f" $new;
+      echo "New dir without underscores: $new"
     done
+
     cd $workingDir || die "Couldn't change dirs to ${workingDir}"
 }
 remove_path_underscores

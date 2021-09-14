@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This script is run on the Hyak periodically to check if the correct file structure is being used.
 # (See File Strucutre Invariant Documentation or the README for more information)
 # If directories that are presumed to exist do not, it creates them. For example,

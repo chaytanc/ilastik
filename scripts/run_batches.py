@@ -5,7 +5,7 @@ import argparse
 
 '''
 This script will run Ilastik object detection using auto_ilastik.sh on all sub dirs in the given directory.
-USAGE: python3 run_batches.py /gscratch/iscrm/freedman/my_images
+USAGE: python3 run_batches.py /gscratch/freedmanlab/ilastik/my_images
     ARGS: 
         imagesdir: path (on Hyak) to the dir containing raw images in "day X" folders
     FLAGS: 
@@ -70,7 +70,7 @@ def run_batches(subdirs):
             call = "./auto_ilastik.sh '%s'" % str(subdir)
         else:
             call = "./auto_ilastik.sh '%s' '%s'" % ("-n", str(subdir))
-        #XXX why is this run after os.system(call)??
+        #XXX why is this printed after os.system(call)??
         print("\n CALLING ", call, "\n")
         temp_val = os.system(call)
         if temp_val != 0:
@@ -82,7 +82,7 @@ def run_analysis(imagesdir):
     project_name = os.path.basename(imagesdir)
 
     # Want to output in the output dir for the given project,
-    # so we go up above and "imagesdir" and "in", and down into "out"
+    # so we go up above project_name and "in", and down into "out" and project_name
     outputdir = imagesdir + "/../../out/" + project_name
     #NOTE: this is where we set output file names??
     output_csv_path = outputdir + "/out.csv"

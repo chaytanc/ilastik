@@ -61,7 +61,7 @@ def rename_files(csv_dir):
 
 
 def rename_file(file):
-    print("Renaming ", file)
+    print("Renaming ", file, " in consolidate_csvs.py")
     parts = os.path.split(file)
     filename = parts[1]
     csv_dir = parts[0]
