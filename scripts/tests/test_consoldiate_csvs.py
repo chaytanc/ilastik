@@ -39,7 +39,8 @@ class TestConsolidateCsvs(unittest.TestCase):
         os.system("cat " + self.outputCSVPath)
         print("Expected: \n")
         os.system("cat " + self.expected)
-        # Sort the rows because I'm not sure what order the rows should be in
+        print("end \n")
+        # Sorts the rows because I'm not sure what order the rows should be in
         exit = os.system("./compare_output.sh {} {}".format(self.expected, self.outputCSVPath))
         self.assertEqual(exit, 0)
 

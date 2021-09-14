@@ -205,7 +205,6 @@ def consolidate_csvs(csv_files, day):
 
 
 def consolidate_csvs_recursive(csv_files, out_path):
-    # out_path = "out.csv"
     fout = open(out_path, "a")
 
     header = _write_first_file(fout, csv_files)
@@ -238,9 +237,25 @@ def consolidate_csvs_recursive(csv_files, out_path):
     print("Finished writing to out_path, ", out_path)
     fout.close()  # closes output file
 
+#todo XXX workign here to deal with different headers
+# Precondition: While the header columns may differ, the file must have at least the columns that
+# current_header_line has
+def _fix_headers(file, current_header_line):
+    # read file in to pandas df
+    # read header into pandas df
+    # compare headers
+    # if file has more header col(s), delete that col
+    # if different order, rearrange file headers to be same order as current_header_line
+    print("")
+
 
 # Modifies fout by adding the header and appending the filename to the
 # csv list of headers
+# Assumes that all csvs it is consolidating have the same header XXX todo working here not always true so need to check
+# if each file has a header matching the last header used and if it doesn't match have to make a new dataframe with new header
+# Or could work to figure out why assumption is not true
+# OR could go through each csv after gettign first header, turn to dataframe, reorder columns based on first header and
+# then proceed to merge csv files
 # Returns the header from the first file
 def _write_first_file(fout, csv_files):
     # first file, gets the headers

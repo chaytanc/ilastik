@@ -16,6 +16,8 @@ EFFECTS:
     Pixel segmentation and object detection run by auto_ilastik.sh will be run on all "day X" folders in the
     given imagesdir. The result are tifs and csvs representing object detection output in the
     hyakDir/uwid/out/rootname/ folder on the Hyak.
+    Moves any existing files at the specified output csv or xlsx to a .copy extension and saves 
+    the new analysis files as out.csv or .xlsx
     
 PRECONDITIONS:
     This script must be run on the Hyak.
@@ -87,11 +89,21 @@ def run_analysis(imagesdir):
     #NOTE: this is where we set output file names??
     output_csv_path = outputdir + "/out.csv"
     output_formatted_path = outputdir + "/out.xlsx"
+    move_existing_output_files(output_csv_path, output_formatted_path)
     # NOTE: multiple calls to consolidate_csvs.py without deleting out.csv will continually append
     call = "python3 consolidate_csvs.py " + outputdir + " " + output_csv_path
     os.system(call)
     call = "python3 format_data.py " + output_csv_path + " " + output_formatted_path
     os.system(call)
+
+
+# Moves any existing files at the specified output csv or xlsx to a .copy extension and saves
+# the new analysis files as out.csv or .xlsx
+def move_existing_output_files(*paths_to_check):
+    for path in paths_to_check:
+        if os.path.exists(path):
+            new = path + ".copy"
+            os.rename(path, new)
 
 
 if __name__ == "__main__":

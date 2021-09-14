@@ -8,12 +8,12 @@
 # output directory (assumes the file structure is enforced locally).
 #
 # INPUT / PARAMETERS:
-#XXX todo fix noclean / test (also getopts doesn't support long options...
-#   --noclean: a flag that determines whether or not the script will automatically clean up (remove) the files
+#XXX todo fix noclean / test
+#   -n: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
 #       not run out of space.
-#   --notransfer or -t: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
+#   -t: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
 #       have already transferred before mostly.
 #   rootdir: This is the local PATH to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
@@ -27,7 +27,7 @@
 #     3) Current working directory is /gscratch/scrubbed/freedman/ilastik
 #
 # OUTPUT / EFFECTS:
-# All files in the given directory will be renamed to use underscores instead of spaces.
+# All files and folders at or below the given rootdir will be renamed to use underscores instead of spaces.
 # It's better this way, trust me.
 # Output will be copied back to the local path ./../{uwid}/out/{rootname} (assuming file invariant is locally upheld)
 # Cleanup:
