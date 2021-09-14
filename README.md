@@ -27,7 +27,7 @@ preconditions at the top. You may find this useful.
 
 ## Video Tutorials
 One-Time Setup: https://youtu.be/rlr7TK4ywJY  
-Typical Analysis Run: https://youtu.be/up1MHTRvY0c
+Typical start.sh Full Pipeline Run: https://youtu.be/up1MHTRvY0c
 
 ## Presentation Tutorials
 Aug. 19 2021: https://docs.google.com/presentation/d/1t2_UBNMZtbM7VbJMtYXJt2JeuKuj7qVD/edit#slide=id.ge71b74fc25_0_6
@@ -37,6 +37,7 @@ Ilastik Model Training Details: https://docs.google.com/document/d/1znWy9IdjHWWb
 Hyak Environment Setup: https://docs.google.com/document/d/1KQDwg4GJw9Nw_sEUWvbM072UghmKq1Amq_hwJXi1ryg/edit?usp=sharing  
 Ilastik Model Training and "By Hand" Method Details: https://docs.google.com/document/d/1JDehptQJb-okzQRx_Ty2cPFCU_NRoqwVJCRtEk8YVFw/edit?usp=sharing  
 Standard File Naming Convention: https://docs.google.com/document/d/1Hrn7xmbiiVGniBQ8X8yr9IEx_727qR8H/edit  
+Transferring Models to the Hyak: https://docs.google.com/document/d/1UPf58aQaBBOidGMZmWsRPX1V8In49qSf1lQ-AkhDK5I/edit?usp=sharing  
 
 
 
