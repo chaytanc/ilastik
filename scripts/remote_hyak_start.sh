@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## SBATCH account and partition setup XXX are these comments necessary for sbatch to work?
+## SBATCH account and partition setup
 #SBATCH --account=iscrm
 #SBATCH --partition=compute-hugemem
 
@@ -55,13 +55,15 @@ rootdir=$1
 hyakDir=$2
 uwid=$3
 
-# Go to working directory and check file structure invariant
-cd $hyakDir || die "Couldn't find $hyakDir"
-pwd
-./check_file_structure.sh $hyakDir $rootdir $uwid
+#./check_file_structure.sh $hyakDir $rootdir $uwid
+#TODO change this to be rootname not rootdir
+./check_file_structure.sh $rootdir $hyakDir $uwid
 
+# Go to working directory and check file structure invariant
+cd $hyakDir || die "Error: Couldn't find $hyakDir"
 # Start run_batches.py
 cd ${hyakDir}/scripts/
+echo "Working dir: $(pwd)"
 if [ $noclean == true ]
 then
 # sbatch runs computation on computation node -- is currently way to slow to use

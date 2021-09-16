@@ -4,6 +4,8 @@ import ntpath
 from pathlib import Path
 import re
 
+import pandas as pd
+
 ''' 
 This script takes all csvs below the given outputdir and consolidates them into one csv with n+1 rows where
 n is the number of csvs consolidated (there is a header row). The consolidated csv file path and filename is 
@@ -217,6 +219,8 @@ def consolidate_csvs_recursive(csv_files, out_path):
         day = get_day_recursive(new_csv_path)
         # print("day: ", day)
         with open(new_csv_path, "r+") as f:
+            #XXX todo working here to deal with headers that changed
+            _fix_headers(f, )
             # supposed_header = f.readline()
             # skip headers
             f.readline()
@@ -242,11 +246,26 @@ def consolidate_csvs_recursive(csv_files, out_path):
 # current_header_line has
 def _fix_headers(file, current_header_line):
     # read file in to pandas df
+    csv = pd.read_csv(file)
     # read header into pandas df
+    temp = _line_to_csv(current_header_line)
+    header_df = pd.read_csv(temp)
+    print("FILE COLS: ", csv.columns)
+    print("HEADER COLS: ", header_df.columns)
+
     # compare headers
+    # if not file.readline() == current_header_line:
+
     # if file has more header col(s), delete that col
     # if different order, rearrange file headers to be same order as current_header_line
     print("")
+
+def _line_to_csv(line):
+    with open("temp.csv", "w") as f:
+        f.write(line)
+    f.close()
+    #XXX delete later?
+    return f
 
 
 # Modifies fout by adding the header and appending the filename to the

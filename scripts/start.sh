@@ -67,17 +67,14 @@ uwid=$2
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
 hyakDir="/gscratch/scrubbed/freedman/ilastik/"
 #hyakDir="/gscratch/iscrm/freedman/ilastik/"
+#hyakDir="/gscratch/freedmanlab/ilastik/"
 
 remove_path_underscores () {
     # Rename all directories to have underscores instead of spaces, starting at rootdir
     workingDir=$(pwd)
     cd $rootdir || die "couldn't cd to rootdir"
     cd ".."
-#    for d in $(find . -name '*_*' -type d) ; do
-#        new=$(echo "${d}" | sed -e 's/ /_/g')
-#        mv "${d}" $new
-#        echo "New dir without underscores: $new"
-#    done
+    # Recursively finds all spaces in directories and replaces them with underscores
     find . -depth -name '* *' \
     | while IFS= read -r f ;
     do
@@ -90,6 +87,8 @@ remove_path_underscores () {
     cd $workingDir || die "Couldn't change dirs to ${workingDir}"
 }
 remove_path_underscores
+# The rootname of the root directory (contains "day X" folders) without spaces
+noSpacesName=$(basename $noSpacesDir)
 
 # Transfer scp local files to Hyak
   # Login
@@ -110,10 +109,7 @@ echo "Starting the pipeline on the Hyak..."
 #ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 # Transfer output files back to local
-#XXX may need to mkdir first since file structure invariant is only enforced on hyak, not locally
-noSpacesName=$(basename $noSpacesDir)
 hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/"
-#XXX want to put in the same place as output from
 localOutDir="${noSpacesDir}/../../out/"
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 # ssh to Hyak, run cleanup script
