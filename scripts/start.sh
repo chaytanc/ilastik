@@ -15,6 +15,7 @@
 #       not run out of space.
 #   -t: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
 #       have already transferred before mostly.
+#   -p: Your phone number on which you would like to receive a text when the pipeline finishes
 #   rootdir: This is the local PATH to the folder containing "day X" folders which contain the raw images of organoids.
 #       It should be relative to the location this start.sh script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
@@ -50,19 +51,43 @@ noclean=false
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided, start.sh"
 
-while getopts :n:t: flag
+while getopts :ntp: flag
 do
     case "${flag}" in
-        n) noclean=true; shift;;
-        t) notransfer=true; shift;;
+        n) noclean=true;;
+        t) notransfer=true;;
+        p) phone=${OPTARG};;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
+shift $((OPTIND-1))
 
 # Set up useful references
+# Get mandatory args based on number of optional args used
+#case $# in
+#3)
+#    rootdir=$2
+#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
+#    uwid=$3
+#    ;;
+#4)
+#    rootdir=$3
+#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
+#    uwid=$4
+#    ;;
+#5)
+#    rootdir=$5
+#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
+#    uwid=$6
+#    ;;
+#*)
+#    die "Too many arguments passed"
+#    ;;
+#esac
 rootdir=$1
 noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
+
 #XXX switch to not be in scrubbed once lab gets its own storage
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
 hyakDir="/gscratch/scrubbed/freedman/ilastik/"
@@ -102,7 +127,7 @@ fi
 
 # Login and run hyak bootstrap script
 echo "Starting the pipeline on the Hyak..."
-#XXX just changed
+say "Starting the pipeline on the Hyak..."
 hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/${noSpacesName}"
 localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 #XXX sbatch currently works but is very slow and hides stdout so not using. Also
@@ -110,7 +135,15 @@ localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 #ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 
+if [ ! -z "${phone}" ]
+then
+    curl -X POST https://textbelt.com/text \
+       --data-urlencode phone="$phone" \
+       --data-urlencode message='The Hyak pipeline has finished running!' \
+       -d key=textbelt
+fi
 say "Hyak analysis is done" || say "There was an error"
+
 # Transfer output files back to local
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 
@@ -118,4 +151,7 @@ scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "cou
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"
+
+
+
 

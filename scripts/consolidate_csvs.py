@@ -205,7 +205,6 @@ def consolidate_csvs(csv_files, day):
     fout.close()  # closes output file
 
 
-
 def consolidate_csvs_recursive(csv_files, out_path):
     fout = open(out_path, "a")
 
@@ -240,6 +239,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
     print("Finished writing to out_path, ", out_path)
     fout.close()  # closes output file
 
+
 #todo XXX workign here to deal with different headers
 # Precondition: While the header columns may differ, the file must have at least the columns that
 # current_header_line has
@@ -253,21 +253,9 @@ def _fix_headers(file, current_header_line):
     # print("FILE COLS: ", csv.columns)
     # print("HEADER COLS: ", header_df.columns)
     # print("")
-    # compare headers
-    # if file has more header col(s) than current_header_line, deletes those
-    same_cols = header_df.columns.intersection(csv.columns)
-    # Cols in header_df and not in csv
-    diff_cols = header_df.columns.difference(csv.columns)
-    if len(diff_cols.values) != 0:
-        print("FOUND mismatched headers; values in previous header not in current file: ", diff_cols.values)
-    cols_df = same_cols.join(diff_cols, how="outer")
-    cols_df = cols_df.reindex(header_df.columns)
-    cols = cols_df[0].values
-    # if different order, rearrange file headers to be same order as current_header_line
-    new_header = header_df.reindex(columns=cols)
-    # may add column that didn't exist before --> Precondition; don't have that.
-    assert(len(csv.columns) <= len(header_df.columns))
-    new_csv = csv.reindex(columns=cols)
+
+    # Compare header differences, take the left join of the header_df and csv headers, reindex dfs accordingly
+    new_header, new_csv = _reindex_df_headers(header_df, csv)
 
     # Write fixed header df to csv
     new_csv.to_csv(file.name, index=False)
@@ -285,6 +273,28 @@ def _fix_headers(file, current_header_line):
 
     # noinspection PyRedundantParentheses
     return (nf, new_header)
+
+
+# Effects: takes the left merge of column headers and then reindexes both dataframes based on that.
+#       Should not modify old_header_df, but may modify and rearrange contents of new_header_df.
+# Return: reindexed (old_header_df, new_header_df)
+def _reindex_df_headers(old_header_df, new_header_df):
+    # compare headers
+    # if file has more header col(s) than current_header_line, deletes those
+    same_cols = old_header_df.columns.intersection(new_header_df.columns)
+    # Cols in header_df and not in csv
+    diff_cols = old_header_df.columns.difference(new_header_df.columns)
+    if len(diff_cols.values) != 0:
+        print("FOUND mismatched headers; values in previous header not in current file: ", diff_cols.values)
+    cols_df = same_cols.join(diff_cols, how="outer")
+    cols_df = cols_df.reindex(old_header_df.columns)
+    cols = cols_df[0].values
+    # if different order, rearrange file headers to be same order as current_header_line
+    old_header_df = old_header_df.reindex(columns=cols)
+    # may add column that didn't exist before --> Precondition; don't have that.
+    assert(len(old_header_df.columns) <= len(new_header_df.columns))
+    new_header_df = new_header_df.reindex(columns=cols)
+    return (old_header_df, new_header_df)
 
 def _line_to_csv(line):
     with open("temp.csv", "w") as f:
@@ -330,7 +340,17 @@ def _process_line(csv, day, line):
     return processed_line
 
 
+# Moves any existing files at the specified output csv or xlsx to a .copy extension and saves
+# the new analysis files as out.csv or .xlsx
+def move_existing_output_files(*paths_to_check):
+    for path in paths_to_check:
+        if os.path.exists(path):
+            new = path + ".copy"
+            os.rename(path, new)
+
+
 def main(csv_dir, out_path):
+    move_existing_output_files(out_path)
     csvs = get_csvs_recursive(csv_dir)
     consolidate_csvs_recursive(csvs, out_path)
 

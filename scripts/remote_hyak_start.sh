@@ -64,6 +64,7 @@ cd $hyakDir || die "Error: Couldn't find $hyakDir"
 # Start run_batches.py
 cd ${hyakDir}/scripts/
 echo "Working dir: $(pwd)"
+echo "rootdir dir: ${rootdir}"
 if [ $noclean == true ]
 then
 # sbatch runs computation on computation node -- is currently way to slow to use
