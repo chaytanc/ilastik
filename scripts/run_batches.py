@@ -83,6 +83,8 @@ def run_batches(subdirs):
 
 def run_analysis(imagesdir):
     project_name = os.path.basename(imagesdir)
+    if project_name == "":
+        project_name = os.path.basename(os.path.normpath(imagesdir))
 
     # Want to output in the output dir for the given project,
     # so we go up above project_name and "in", and down into "out" and project_name

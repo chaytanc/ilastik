@@ -62,28 +62,6 @@ do
 done
 shift $((OPTIND-1))
 
-# Set up useful references
-# Get mandatory args based on number of optional args used
-#case $# in
-#3)
-#    rootdir=$2
-#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
-#    uwid=$3
-#    ;;
-#4)
-#    rootdir=$3
-#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
-#    uwid=$4
-#    ;;
-#5)
-#    rootdir=$5
-#    noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
-#    uwid=$6
-#    ;;
-#*)
-#    die "Too many arguments passed"
-#    ;;
-#esac
 rootdir=$1
 noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
@@ -151,7 +129,3 @@ scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "cou
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"
-
-
-
-
