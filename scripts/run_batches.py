@@ -59,6 +59,7 @@ def get_subdirs(imagesdir):
     # Check that there was at least one directory found
     try:
         subdirs[0]
+        print("Will run analysis on ", subdirs)
     except IndexError as e:
         print(e)
         raise FileNotFoundError("Could not find any 'day' or 'Day' subdirectory " + str(imagesdir))
@@ -86,6 +87,7 @@ def run_analysis(imagesdir):
     # Want to output in the output dir for the given project,
     # so we go up above project_name and "in", and down into "out" and project_name
     outputdir = imagesdir + "/../../out/" + project_name
+    print("Analysis output dir: ", outputdir)
     #NOTE: this is where we set output file names??
     output_csv_path = outputdir + "/out.csv"
     output_formatted_path = outputdir + "/out.xlsx"

@@ -87,7 +87,7 @@ remove_path_underscores () {
 }
 remove_path_underscores
 # The rootname of the root directory (contains "day X" folders) without spaces
-noSpacesName=$(basename $noSpacesDir)
+noSpacesName=$(basename "$noSpacesDir")
 
 # Transfer scp local files to Hyak
   # Login
@@ -95,22 +95,25 @@ noSpacesName=$(basename $noSpacesDir)
 if [[ $notransfer == "" ]]
 then
     echo "Transferring your local files..."
-    scp -r $noSpacesDir "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+    scp -r "$noSpacesDir" "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 else
     echo "Skipping file transfer..."
 fi
 
-# ssh into Hyak
-  # Login and run hyak bootstrap script
+# Login and run hyak bootstrap script
 echo "Starting the pipeline on the Hyak..."
+#XXX just changed
+hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/${noSpacesName}"
+localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 #XXX sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
 #ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 ssh "${uwid}@klone.hyak.uw.edu" "./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+
+say "Hyak analysis is done" || say "There was an error"
 # Transfer output files back to local
-hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/"
-localOutDir="${noSpacesDir}/../../out/"
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
+
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
