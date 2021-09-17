@@ -266,6 +266,7 @@ def _fix_headers(file, current_header_line):
     # if different order, rearrange file headers to be same order as current_header_line
     new_header = header_df.reindex(columns=cols)
     # may add column that didn't exist before --> Precondition; don't have that.
+    assert(len(csv.columns) <= len(header_df.columns))
     new_csv = csv.reindex(columns=cols)
 
     # Write fixed header df to csv

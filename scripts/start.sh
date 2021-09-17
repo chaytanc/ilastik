@@ -117,4 +117,5 @@ scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "cou
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
 ssh "${uwid}@klone.hyak.uw.edu" "python3 cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"
 

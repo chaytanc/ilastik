@@ -23,7 +23,7 @@ class TestConsolidateCsvs(unittest.TestCase):
         # /some_dir/test_user/out/testDir/
         self.outputDir = workingdir + "/out/" + projectname
         self.outputCSVPath = self.outputDir + "/out.csv"
-        self.expected = "./expected_out.csv"
+        self.expected = "./data/expected_out.csv"
         # Delete existing output before creating new
         if os.path.exists(self.outputCSVPath):
             os.remove(self.outputCSVPath)

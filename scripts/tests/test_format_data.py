@@ -23,15 +23,24 @@ class TestFormatData(unittest.TestCase):
         self.outputDir = workingdir + "/out/" + projectname
         #self.outputCSV = self.outputDir + "/out.csv"
         # Uses hardcoded expected consolidated csv instead of relying on consoldiate_csvs to work
-        self.outputCSV = "./expected_out.csv"
-        self.output_standardCSV = "./expected_standard_out.csv"
+        self.outputCSV = "./data/expected_out.csv"
+        self.output_standardCSV = "./data/mock_standard_out.csv"
+        self.output_multi_standardCSV = "./data/mock_multi_standard_out.csv"
+        self.output_standard_idCSV = "./data/mock_standard_id_out.csv"
+
         # where to put the actual output from running this test which we will compare with expected
-        self.output_path = self.outputDir + "/actual_formatted_out.csv"
+        # NOTE: this gets deleted later
+        self.output_path = "./data/actual_formatted_out.csv"
+
         # where to find the hard coded expected output of this test
-        self.expected = "./expected_formatted.csv"
-        self.expected_standard = "./expected_standard_formatted.csv"
+        self.expected = "./data/expected_formatted.csv"
+        self.expected_standard = "./data/expected_standard_formatted.csv"
         # This file scrambles 3uM concentration and 1% concentration for b7 and c7
-        self.failed_expected_standard = "./failed_expected_standard_formatted.csv"
+        self.failed_expected_standard = "./data/failed_expected_standard_formatted.csv"
+        # Includes multiple days and expected fold changes
+        self.expected_multi_standard = "./data/expected_multi_standard_formatted.csv"
+        self.expected_standard_id = "./data/expected_standard_id_formatted.csv"
+
         # Delete existing output before creating new
         if os.path.exists(self.output_path):
             os.remove(self.output_path)
@@ -69,7 +78,7 @@ class TestFormatData(unittest.TestCase):
     # day_0/210616_DMSO_1%_c7_01_table.csv
     # day_0/210616_ROCK_100_d7_table.csv
     # Expected Output:
-    # ./expected_standard_out.csv (not sure if order of processing is same, but went alphabetical)
+    # ./mock_standard_out.csv (not sure if order of processing is same, but went alphabetical)
     def test_standard_format(self):
         # Uses standard format
         fd.main(self.output_standardCSV, self.output_path, False)
@@ -93,6 +102,30 @@ class TestFormatData(unittest.TestCase):
         # Comparison should fail because failed_expected_standard has scrambled output
         same_cols = self.compare_csv_cols(self.output_path, self.failed_expected_standard)
         self.assertFalse(same_cols)
+
+
+    def test_multi_days_standard_format(self):
+        fd.main(self.output_multi_standardCSV, self.output_path, False)
+        # Print output comparison
+        print("Actual: \n")
+        os.system("cat " + self.output_path)
+        print("Expected: \n")
+        os.system("cat " + self.expected_multi_standard)
+        # Comparison should fail because failed_expected_standard has scrambled output
+        same_cols = self.compare_csv_cols(self.output_path, self.expected_multi_standard)
+        self.assertTrue(same_cols)
+
+
+    def test_standard_id_format(self):
+        fd.main(self.output_standard_idCSV, self.output_path, False)
+        # Print output comparison
+        print("Actual: \n")
+        os.system("cat " + self.output_path)
+        print("Expected: \n")
+        os.system("cat " + self.expected_standard_id)
+        # Comparison should fail because failed_expected_standard has scrambled output
+        same_cols = self.compare_csv_cols(self.output_path, self.expected_standard_id)
+        self.assertTrue(same_cols)
 
 
     # Allows for numerical differences of +/- 0.01 in output due to different rounding mechanisms
@@ -121,6 +154,7 @@ class TestFormatData(unittest.TestCase):
 
                 # Stop at first unequal columns that are still unequal after checking if numbers are close
                 if not same_cols:
+                    print("\n ERROR: column value ", item, " and ", other_item, " are unequal!")
                     return False
         return same_cols
 
