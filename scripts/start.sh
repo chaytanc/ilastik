@@ -73,7 +73,6 @@ remove_path_underscores () {
     # Rename all directories to have underscores instead of spaces, starting at rootdir
     workingDir=$(pwd)
     cd "${rootdir}" || die "couldn't cd to rootdir"
-    cd ".."
     # Recursively finds all spaces in directories and replaces them with underscores
     find . -depth -name '* *' \
     | while IFS= read -r f ;
