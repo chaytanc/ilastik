@@ -105,7 +105,7 @@ def get_csvs_recursive(csv_dir):
             # print("good csv: ", csv.stem)
             csv_files.append(csv)
     try:
-        file1 = csv_files[0]
+        csv_files[0]
     except FileNotFoundError:
         raise FileNotFoundError("Could not find any csv files in " + str(csv_dir))
     return csv_files
@@ -217,22 +217,21 @@ def consolidate_csvs_recursive(csv_files, out_path):
     for csv in other_files:
         new_csv_path = rename_file(csv)
         day = get_day_recursive(new_csv_path)
-        # print("day: ", day)
         with open(new_csv_path, "r+") as f:
             #XXX todo working here to deal with headers that changed
-            _fix_headers(f, )
-            # supposed_header = f.readline()
+            # new_csv unused because it directly modifies file we're reading instead of making a new one
+            new_csv, header = _fix_headers(f, header)
             # skip headers
-            f.readline()
+            # f.readline()
+            new_csv.readline()
 
             # each line is a row
-            for line in f:
+            # for line in f:
+            for line in new_csv.readlines():
                 # Only write lines that are not the header
                 if line != header:
                     # print("line before \n", line)
-                    # need to append filename to the csv output to the front
-                    # also appends day column
-                    # processed_line = ntpath.basename(csv) + "," + day + "," + line
+                    # appends filename and day columns to the csv output to the front
                     processed_line = _process_line(csv, day, line)
                     # print("new line \n", processed_line)
                     fout.write(processed_line)
@@ -244,28 +243,53 @@ def consolidate_csvs_recursive(csv_files, out_path):
 #todo XXX workign here to deal with different headers
 # Precondition: While the header columns may differ, the file must have at least the columns that
 # current_header_line has
+# Returns: reordered file and reordered header as a tuple
 def _fix_headers(file, current_header_line):
     # read file in to pandas df
     csv = pd.read_csv(file)
     # read header into pandas df
     temp = _line_to_csv(current_header_line)
     header_df = pd.read_csv(temp)
-    print("FILE COLS: ", csv.columns)
-    print("HEADER COLS: ", header_df.columns)
-
+    # print("FILE COLS: ", csv.columns)
+    # print("HEADER COLS: ", header_df.columns)
+    # print("")
     # compare headers
-    # if not file.readline() == current_header_line:
-
-    # if file has more header col(s), delete that col
+    # if file has more header col(s) than current_header_line, deletes those
+    same_cols = header_df.columns.intersection(csv.columns)
+    # Cols in header_df and not in csv
+    diff_cols = header_df.columns.difference(csv.columns)
+    if len(diff_cols.values) != 0:
+        print("FOUND mismatched headers; values in previous header not in current file: ", diff_cols.values)
+    cols_df = same_cols.join(diff_cols, how="outer")
+    cols_df = cols_df.reindex(header_df.columns)
+    cols = cols_df[0].values
     # if different order, rearrange file headers to be same order as current_header_line
-    print("")
+    new_header = header_df.reindex(columns=cols)
+    # may add column that didn't exist before --> Precondition; don't have that.
+    new_csv = csv.reindex(columns=cols)
+
+    # Write fixed header df to csv
+    new_csv.to_csv(file.name, index=False)
+    # Read file as IO thing instead of pandas dataframe to return in same format we received it
+    nf = open(file.name, "r+")
+
+    # Get new_header as a string
+    # new_header = new_header.to_string(header=True, )
+    new_header.to_csv('temp.csv', index=False)
+    with open('temp.csv', 'r') as new_header:
+        new_header = new_header.readline()
+
+    # Cleanup
+    os.remove('temp.csv')
+
+    # noinspection PyRedundantParentheses
+    return (nf, new_header)
 
 def _line_to_csv(line):
     with open("temp.csv", "w") as f:
         f.write(line)
     f.close()
-    #XXX delete later?
-    return f
+    return "temp.csv"
 
 
 # Modifies fout by adding the header and appending the filename to the
