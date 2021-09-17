@@ -107,7 +107,7 @@ class TestFormatData(unittest.TestCase):
             other_col = out[col]
             # Compare each item in the column to the corresponding item in the other column
             for i, item in enumerate(this_col):
-                # getting row this way causes row order agnostic behavior
+                # getting row this way causes row order agnostic behavior??
                 other_item = other_col.iloc[i]
                 # Check if numeric values are close enough
                 if item != other_item:
