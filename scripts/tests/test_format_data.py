@@ -16,7 +16,7 @@ class TestFormatData(unittest.TestCase):
         userdir = "../../"
         uwid = "test_user"
         workingdir = userdir + "/" + uwid + "/"
-        call = "../check_file_structure.sh " + projectname + " " + userdir + " " + uwid
+        call = "../bootstrap/check_file_structure.sh " + projectname + " " + userdir + " " + uwid
         os.system(call)
         # where to find the input for this test (the consolidated csv file)
         # /some_dir/test_user/out/testDir/

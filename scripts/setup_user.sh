@@ -28,9 +28,7 @@ uwid=$3
 #XXX todo make duo mobile remember user so less 2FA
 #https://duo.com/docs/remembered-devices
 # Can use  ssh keygen, would need script to do it automatically and not sure if this eliminates need for 2fa
-#https://duo.com/docs/remembered-devices
-scp "./remote_hyak_start.sh" "${uwid}@klone.hyak.uw.edu:~/"
-scp "./check_file_structure.sh" "${uwid}@klone.hyak.uw.edu:~/"
-scp "./cleanup.py" "${uwid}@klone.hyak.uw.edu:~/"
+#XXX fixing so we only have to run one scp for these
+scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure
-ssh "${uwid}@klone.hyak.uw.edu" "./check_file_structure.sh ${rootname} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, setup_user.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, setup_user.sh"

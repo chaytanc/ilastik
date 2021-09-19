@@ -14,7 +14,7 @@ class TestFormatData(unittest.TestCase):
         userdir = "../../"
         uwid = "test_user"
         workingdir = userdir + "/" + uwid + "/"
-        call = "../check_file_structure.sh " + projectname + " " + userdir + " " + uwid
+        call = "../bootstrap/check_file_structure.sh " + projectname + " " + userdir + " " + uwid
         os.system(call)
         # /some_dir/test_user/out/testDir/
         self.outputDir = workingdir + "/out/" + projectname

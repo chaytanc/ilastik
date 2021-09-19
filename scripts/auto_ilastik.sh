@@ -71,7 +71,7 @@ do
   noSpacesImages="$noSpacesImages $imagesDir/$newImage "
 done
 IFS=$SAVEIFS
-echo "Done renaming raw data"
+echo "Done renaming raw data to $noSpacesImages"
 
 
 # PIXEL SEGMENTATION
