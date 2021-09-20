@@ -57,7 +57,7 @@ uwid=$3
 
 #./check_file_structure.sh $hyakDir $rootdir $uwid
 #TODO change this to be rootname not rootdir
-./check_file_structure.sh $rootdir $hyakDir $uwid
+./bootstrap/check_file_structure.sh $rootdir $hyakDir $uwid
 
 # Go to working directory and check file structure invariant
 cd $hyakDir || die "Error: Couldn't find $hyakDir"
@@ -69,8 +69,8 @@ if [ $noclean == true ]
 then
 # sbatch runs computation on computation node -- is currently way to slow to use
 # srun python3 run_batches.py --noclean "${rootdir}"
-    ./run_batches.py --noclean "$rootdir"
+    python3 run_batches.py --noclean "$rootdir"
 else
-    ./run_batches.py "$rootdir"
+    python3 run_batches.py "$rootdir"
 #    srun python3 run_batches.py "${rootdir}"
 fi

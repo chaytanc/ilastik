@@ -8,8 +8,8 @@
 #     rootname: name of the dir containing raw images in "day X" folders -- should have no spaces
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
-#         If using this script for testing, perhaps on a local machine, pass in the user directory
-#         containing the project name dir, and then in/ and out/ dirs.
+#         If using this script for testing, perhaps on a local machine, pass in the
+#         the uwid directory which itself contains the project name dir
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 # EFFECTS:
 #    This script makes the file structure where input and output are stored on the Hyak, ie making

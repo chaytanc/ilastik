@@ -26,11 +26,6 @@ PRECONDITIONS:
 global ARGS
 ARGS = None
 
-#XXX not used
-global BASEDIR
-BASEDIR = "/gscratch/scrubbed/freedman/ilastik/"
-
-
 # Gets the command line arguments and returns them
 def parse_args():
     parser = argparse.ArgumentParser()
