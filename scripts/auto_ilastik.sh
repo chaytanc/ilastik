@@ -75,7 +75,7 @@ echo "Done renaming raw data to $noSpacesImages"
 
 
 # PIXEL SEGMENTATION
-#NOTE: Put your model name under --project="your_model.ilp"
+#NOTE: Put your model name under project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
 #XXX need to install ilastik in freedman and chaytan directories
@@ -99,7 +99,7 @@ $ilastikStart \
     --raw_data $noSpacesImages
 
 # OBJECT DETECTION
-#NOTE: Put your model name under --project=".../models/your_model.ilp"
+#NOTE: Put your model name under project=".../models/your_model.ilp"
 
 # Looping through output files from segmentation and creating the segmentation-images variable we will pass
 # to object detection
