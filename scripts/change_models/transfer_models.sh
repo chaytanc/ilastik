@@ -12,10 +12,9 @@
 #     files*: local path(s) to files you want to transfer. If you have multiple files, use the form where the whole
 #       files argument is surrounded by quotes, but each file within the quotes is separated by a space.
 # USAGE:
-#  Ex: ./transfer_models.sh ~/ chaytan "../models/cyst_pixel_seg.ilp ../models/cyst_object_det3.ilp"
-#
-# EFFECTS:
-#XXX todo
+#  Ex: ./transfer_models.sh ~/ chaytan "../../models/cyst_pixel_seg.ilp ../../models/cyst_object_det3.ilp"
+#     This example copies the two files cyst_pixel_seg.ilp and cyst_object_det3.ilp to my home directory at ~/
+#     on the Hyak.
 
 # A func to kill the script and direct errors to stderr
 die () {
@@ -24,40 +23,41 @@ die () {
 }
 
 transfer_files() {
-  # Read params
-  transfer_path=$1
-  files=$2
-  # Iterate over possible files
-  for file in $files
-  do
-      if [[ -d $file ]]
-      then
-          scp -r $file $transfer_path || die "Couldn't scp directory ${file}"
-      else
-          scp $file $transfer_path || die "Couldn't scp ${file}"
-      fi
-  done
+
+    # Read params
+    # Shift to get the rest of args after the first
+    transfer_path=$1; shift
+    files=$*
+    # Iterate over possible files
+#    xargs -n 1 -J % transfer_file % <$files
+    for file in ${files}
+    do
+      transfer_file "${file}"
+    done
+}
+
+transfer_file() {
+    echo "file: " $file
+    if [[ -d $file ]]
+    then
+        scp -r $file $transfer_path || die "Couldn't scp directory ${file}"
+    else
+        scp $file $transfer_path || die "Couldn't scp ${file}"
+    fi
 }
 
 main() {
       transferdir=$1
       uwid=$2
+      shift; shift
       transfer_path="${uwid}@klone.hyak.uw.edu:${transferdir}"
-      files=$3
+      files="$*"
+      echo "FILES: " "${files}"
       transfer_files $transfer_path $files
 }
 
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 3 ] || die "3 arguments required, $# provided, start.sh"
 main $1 $2 $3
-
-#XXX todo add support for editing the start.sh file with given models (also add flag that controls whether to do that)
-# getopts for flag
-
-# Tries to find scripts dir around where the model files were transferred to and if it does, looks for start.sh
-# If start.sh is found, replaces --project "previous_pixel.ilp" lines to use --project "current_pixel.ilp" and
-# --project "previous_object.ilp"
-#replace_start_models() {
-#}
 
 
