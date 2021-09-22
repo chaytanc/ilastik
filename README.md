@@ -39,6 +39,7 @@ Ilastik Model Training and "By Hand" Method Details: https://docs.google.com/doc
 Standard File Naming Convention: https://docs.google.com/document/d/1Hrn7xmbiiVGniBQ8X8yr9IEx_727qR8H/edit  
 Transferring Models to the Hyak: https://docs.google.com/document/d/1UPf58aQaBBOidGMZmWsRPX1V8In49qSf1lQ-AkhDK5I/edit?usp=sharing  
 Changing Model Files Used on the Hyak: https://docs.google.com/document/d/1DKRIbaSFAym9NO0QGRwfrTHYavDsclfeZI13IRqOVuE/edit?usp=sharing  
+Common Debugging Issues: https://docs.google.com/document/d/1XEcYQI6UjKCwsu2z3ughn3Je8sk3T-i6Vc76T3NUm-U/edit?usp=sharing  
 
 
 
