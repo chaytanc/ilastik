@@ -28,5 +28,5 @@ uwid=$3
 #https://duo.com/docs/remembered-devices
 # Can use  ssh keygen, would need script to do it automatically and not sure if this eliminates need for 2fa
 scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
-# ssh in so we can check the Hyak file structure
-ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, setup_user.sh"
+# ssh in so we can check the Hyak file structure and check that anaconda is setup
+ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"

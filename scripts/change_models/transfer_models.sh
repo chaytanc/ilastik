@@ -26,7 +26,7 @@ transfer_files() {
 
     # Read params
     # Shift to get the rest of args after the first
-    transfer_path=$1; shift
+    transfer_path="$1"; shift
     files=$*
     # Iterate over possible files
 #    xargs -n 1 -J % transfer_file % <$files
@@ -58,6 +58,6 @@ main() {
 
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 3 ] || die "3 arguments required, $# provided, start.sh"
-main $1 $2 $3
+main "$1" "$2" "$3"
 
 

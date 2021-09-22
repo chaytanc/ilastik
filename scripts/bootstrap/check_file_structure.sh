@@ -33,7 +33,7 @@ do
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
 done
-rootname=$1
+rootname="$1"
 rootname=$(basename $rootname)
 hyakDir=$2
 uwid=$3

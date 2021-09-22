@@ -62,7 +62,7 @@ do
 done
 shift $((OPTIND-1))
 
-rootdir=$1
+rootdir="$1"
 noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
 
@@ -95,8 +95,8 @@ noSpacesName=$(basename "$noSpacesDir")
 # If the -t flag is not set, transfer files over
 if [[ $notransfer == "" ]]
 then
-    echo "Transferring your local files..."
-    scp -r "$noSpacesDir" "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
+    echo "Transferring your local ${noSpacesDir} directory..."
+    scp -r "${noSpacesDir}" "${uwid}@klone.hyak.uw.edu:${hyakDir}/${uwid}/in/"
 else
     echo "Skipping file transfer..."
 fi
