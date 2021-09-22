@@ -12,8 +12,8 @@
 NOTE: You will have to type in your NetID password many times as well as do 2FA quite a bit. This is expected due to Hyak access restrictions on ssh.  
 
 You are able to use models that are not the defaults provided to analyze your images.
-You may do so by transferring your model files to /gscratch/scrubbed/freedman/ilastik/models
-and changing the referenced models in /gscratch/scrubbed/freedman/ilastik/scripts/auto\_ilastik.sh.  
+You may do so by transferring your model files to /gscratch/freedmanlab/ilastik/models
+and changing the referenced models in /gscratch/freedmanlab/ilastik/scripts/auto\_ilastik.sh.  
 
 You will find that each script in the scripts directory has a description of uses and 
 preconditions at the top. You may find this useful.

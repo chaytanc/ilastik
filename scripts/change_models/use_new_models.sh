@@ -9,7 +9,7 @@
 # (if you give a path to a model that isn't actually on the Hyak / hasn't been transferred, this script fails)
 #
 # PARAMETERS:
-#    hyakdir: the root on the Hyak of the pipeline, for example, /gscratch/scrubbed/freedman/ilastik, which contains
+#    hyakdir: the root on the Hyak of the pipeline, for example, /gscratch/freedmanlab/ilastik, which contains
 #        scripts, models... and other folders
 #    localauto: the local path of the auto_ilastik.sh file to replace the ilastik models in,
 #       for example, "./auto_ilastik.sh"

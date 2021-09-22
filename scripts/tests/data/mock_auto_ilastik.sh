@@ -7,7 +7,7 @@
 #       It is relative to where this script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
-#     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
+#     the root dir of the project input should be under /gscratch/freedmanlab/ilastik/uwID/in
 #     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDirName
 #     assumes this script is run as "./auto_ilastik.sh ...params" (in other words, that this script is run while in
 #         the scripts directory, and not called from a higher dir)

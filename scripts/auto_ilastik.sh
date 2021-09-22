@@ -7,7 +7,7 @@
 #       It is relative to where this script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
 # PRECONDITIONS:
-#     the root dir of the project input should be under XXX change later /gscratch/scrubbed/freedman/ilastik/uwID/in
+#     the root dir of the project input should be under /gscratch/freedmanlab/ilastik/uwID/in
 #     the imagesDir passed in should have a corresponding dir in /uwID/out/imagesDirName
 #     assumes this script is run as "./auto_ilastik.sh ...params" (in other words, that this script is run while in
 #         the scripts directory, and not called from a higher dir)
@@ -78,13 +78,11 @@ echo "Done renaming raw data to $noSpacesImages"
 #NOTE: Put your model name under project="your_model.ilp"
 # (and make sure to put your model in the models directory)
 
-#XXX need to install ilastik in freedman and chaytan directories
-#XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
-#~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
 if [[ $test == "" ]]
 then
-    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.4.0b15-Linux/run_ilastik.sh "
+#    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.4.0b15-Linux/run_ilastik.sh "
+    ilastikStart="/gscratch/freedmanlab/ilastik-1.4.0b15-Linux/run_ilastik.sh "
 else
     #NOTE: for debugging off the Hyak, insert your local path to ilastik here and use the -t flag
     ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh"

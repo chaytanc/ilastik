@@ -24,8 +24,8 @@
 # PRECONDITIONS:
 #     1) Have a UW NetID that is authorized to login to the Hyak.(If this is not the case, contact
 #         benof@uw.edu to request to gain access).
-#     2) .../freedman/ilastik/uwid directory is set up / have been added as a freedman user
-#     3) Current working directory is /gscratch/scrubbed/freedman/ilastik
+#     2) .../freedmanlab/ilastik/uwid directory is set up / have been added as a freedman user
+#     3) Current working directory is /gscratch/freedmanlab/ilastik
 #
 # OUTPUT / EFFECTS:
 # All files and folders at or below the given rootdir will be renamed to use underscores instead of spaces.
@@ -66,11 +66,11 @@ rootdir=$1
 noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
 
-#XXX switch to not be in scrubbed once lab gets its own storage
+#XXX currently switching to not be in scrubbed once lab gets its own storage
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
-hyakDir="/gscratch/scrubbed/freedman/ilastik/"
+#hyakDir="/gscratch/scrubbed/freedman/ilastik/"
 #hyakDir="/gscratch/iscrm/freedman/ilastik/"
-#hyakDir="/gscratch/freedmanlab/ilastik/"
+hyakDir="/gscratch/freedmanlab/ilastik/"
 
 remove_path_underscores () {
     # Rename all directories to have underscores instead of spaces, starting at rootdir

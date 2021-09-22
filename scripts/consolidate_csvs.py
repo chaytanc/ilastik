@@ -18,7 +18,7 @@ PARAMETERS:
     
 USAGE: python3 consolidate_csvs.py {outputdir} {outputpath}
     Ex:
-    python3 consolidate_csvs.py /gscratch/scrubbed/freedman/uwid/out/testDir/ /gscratch/scrubbed/freedman/uwid/out/testDir/out.csv
+    python3 consolidate_csvs.py /gscratch/freedmanlab/uwid/out/testDir/ /gscratch/freedmanlab/uwid/out/testDir/out.csv
     Potentially useful commands: 
         pwd | sed 's/ /\\ /g' | pbcopy
         pbpaste | xargs python3 consolidate_csvs.py

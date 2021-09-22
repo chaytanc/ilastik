@@ -6,7 +6,7 @@
 
 ## working directory for this job:
 ##XXX this may be incorrect dir for sbatch
-#SBATCH --chdir=/gscratch/scrubbed/freedman/ilastik/scripts
+#SBATCH --chdir=/gscratch/freedmanlab/ilastik/scripts
 
 ## allocation:
 ## nodes: # of nodes
@@ -55,7 +55,7 @@ rootdir=$1
 hyakDir=$2
 uwid=$3
 
-#./check_file_structure.sh $hyakDir $rootdir $uwid
+conda activate /gscratch/freedmanlab
 #TODO change this to be rootname not rootdir
 ./bootstrap/check_file_structure.sh $rootdir $hyakDir $uwid
 
