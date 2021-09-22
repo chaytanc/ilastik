@@ -78,8 +78,6 @@ echo "Done renaming raw data to $noSpacesImages"
 #NOTE: Put your model name under project='../../models/cyst_pixel_seg.ilp' \
 # (and make sure to put your model in the models directory)
 
-#XXX need to install ilastik in freedman and chaytan directories
-#XXX using scrubbed temporarily while we potentially buy disk space
 # ** Replace project="..." **
 #~/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh \
 if [[ $test == "" ]]

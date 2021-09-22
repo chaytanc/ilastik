@@ -34,7 +34,6 @@ class TestFormatData(unittest.TestCase):
             # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:
         # No .csv or tif files in any day X folders
-    #XXX should also probably chekc that no files we want to keep in higher folders are deleted on accident
     def test_cleanup(self):
         cu.main(self.outputDir)
         # Look through files of outputDir and if any are csvs or tifs in day X folders that are also not an output file

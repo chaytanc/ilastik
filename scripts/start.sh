@@ -66,10 +66,8 @@ rootdir=$1
 noSpacesDir=$(echo "$rootdir" | sed -e "s/ /_/g")
 uwid=$2
 
-#XXX currently switching to not be in scrubbed once lab gets its own storage
 # ** Replace with different path to freedman node on Hyak once we buy 1 TB storage **
 #hyakDir="/gscratch/scrubbed/freedman/ilastik/"
-#hyakDir="/gscratch/iscrm/freedman/ilastik/"
 hyakDir="/gscratch/freedmanlab/ilastik/"
 
 remove_path_underscores () {

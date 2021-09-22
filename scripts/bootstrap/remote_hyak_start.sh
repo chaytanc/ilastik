@@ -5,7 +5,6 @@
 #SBATCH --partition=compute-hugemem
 
 ## working directory for this job:
-##XXX this may be incorrect dir for sbatch
 #SBATCH --chdir=/gscratch/freedmanlab/ilastik/scripts
 
 ## allocation:
