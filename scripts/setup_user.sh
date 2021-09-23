@@ -8,7 +8,7 @@
 #XXX todo swap these params so hyakdir comes first and do the same for check_file_structure
 #     rootname: the dir name (not path) which contains raw images in "day X" folders, ie "experiment1"
 #     hyakDir: The directory to the freedman lab files under which your user files are located
-#         Ex: hyakDir = /gscratch/freedman/ilastik/, should contain /gscratch/freedman/ilastik/user
+#         Ex: hyakDir = /gscratch/freedmanlab/ilastik/, should contain /gscratch/freedmanlab/ilastik/user
 #     uwid: UW NetID that was used to log in to the Hyak (no @uw.edu)
 # EFFECTS:
 # Copies over remote_hyak_start.sh, check_file_structure.sh, and cleanup.py, then sshes and runs check_file_structure.sh
@@ -30,5 +30,5 @@ uwid=$3
 scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure and check that anaconda is setup
 ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; \
-bash Miniconda3-latest-Linux-x86_64.sh -b -p /gscratch/freedmanlab/miniconda3 \
+bash /gscratch/freedmanlab/Miniconda3-latest-Linux-x86_64.sh -b -p /gscratch/freedmanlab/miniconda3 \
 conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
