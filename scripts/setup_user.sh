@@ -30,5 +30,5 @@ uwid=$3
 scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure and check that anaconda is setup
 ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; \
-bash /gscratch/freedmanlab/Miniconda3-latest-Linux-x86_64.sh -b -p /gscratch/freedmanlab/miniconda3; \
+bash /gscratch/freedmanlab/Miniconda3-latest-Linux-x86_64.sh -b -u -p /gscratch/freedmanlab/miniconda3; \
 conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
