@@ -29,4 +29,6 @@ uwid=$3
 # Can use  ssh keygen, would need script to do it automatically and not sure if this eliminates need for 2fa
 scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure and check that anaconda is setup
-ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; \
+bash Miniconda3-latest-Linux-x86_64.sh -b -p /gscratch/freedmanlab/miniconda3 \
+conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
