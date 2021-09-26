@@ -120,6 +120,7 @@ then
 fi
 say "Hyak analysis is done" || say "There was an error"
 
+./bootstrap/check_file_invariant.sh $noSpacesName $hyakDir $uwid
 # Transfer output files back to local
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 
