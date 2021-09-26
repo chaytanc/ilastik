@@ -108,7 +108,7 @@ hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/${noSpacesName}"
 localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 
 # Check local directory invariant before proceeding
-./bootstrap/check_file_structure.sh $noSpacesName $hyakDir $uwid
+./bootstrap/check_file_structure.sh $noSpacesName "../" $uwid
 
 #XXX sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
