@@ -106,6 +106,10 @@ echo "Starting the pipeline on the Hyak..."
 say "Starting the pipeline on the Hyak..."
 hyakOutDir="${hyakDir}/scripts/${noSpacesDir}/../../out/${noSpacesName}"
 localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
+
+# Check local directory invariant before proceeding
+./bootstrap/check_file_invariant.sh $noSpacesName $hyakDir $uwid
+
 #XXX sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
 #ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
@@ -120,7 +124,6 @@ then
 fi
 say "Hyak analysis is done" || say "There was an error"
 
-./bootstrap/check_file_invariant.sh $noSpacesName $hyakDir $uwid
 # Transfer output files back to local
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 
