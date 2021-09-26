@@ -29,6 +29,28 @@ uwid=$3
 # Can use  ssh keygen, would need script to do it automatically and not sure if this eliminates need for 2fa
 scp -r "./bootstrap" "${uwid}@klone.hyak.uw.edu:~/"
 # ssh in so we can check the Hyak file structure and check that anaconda is setup
+#ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; \
+#bash /gscratch/freedmanlab/Miniconda3-latest-Linux-x86_64.sh -b -u -p /gscratch/freedmanlab/miniconda3; \
+#conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
+#XXX removed sourcing Miniconda.sh file so that it doesn't reinstall conda for randy, just need to see if appending to
+# his bashrc file will work
 ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/check_file_structure.sh ${rootname} ${hyakDir} ${uwid}; \
-bash /gscratch/freedmanlab/Miniconda3-latest-Linux-x86_64.sh -b -u -p /gscratch/freedmanlab/miniconda3; \
+echo ' \
+# >>> conda initialize >>> \
+# !! Contents within this block are managed by 'conda init' !! \
+__conda_setup="$('/gscratch/freedmanlab/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)" \
+if [ $? -eq 0 ]; then \
+    eval "$__conda_setup" \
+else \
+    if [ -f "/gscratch/freedmanlab/miniconda3/etc/profile.d/conda.sh" ]; then \
+        . "/gscratch/freedmanlab/miniconda3/etc/profile.d/conda.sh" \
+    else \
+        export PATH="/gscratch/freedmanlab/miniconda3/bin:$PATH" \
+    fi \
+fi \
+unset __conda_setup \
+# <<< conda initialize <<< \
+# Setting base of conda to use freedman env, not default base \
+export PATH="/gscratch/freedmanlab/miniconda3/condabin:$PATH" \
+' >> ~/.bashrc \
 conda init bash; conda activate /gscratch/freedmanlab; echo setup done" || die "couldn't ssh in to Hyak, setup_user.sh"
