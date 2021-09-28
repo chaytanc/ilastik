@@ -218,6 +218,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
         day = get_day_recursive(new_csv_path)
         with open(new_csv_path, "r+") as f:
             # new_csv unused because it directly modifies file we're reading instead of making a new one
+            #XXX working here beceause _fix_headers doesn't have permission on the Hyak
             new_csv, header = _fix_headers(f, header)
             # skip headers
             new_csv.readline()
@@ -264,13 +265,14 @@ def _fix_headers(file, current_header_line):
     new_header.to_csv('./temp.csv', index=False)
     # Write to new_header the rearranged header we stored in temp.csv
     with open('./temp.csv', 'r') as new_header:
-        new_header = new_header.readline()
+        new_header_line = new_header.readline()
+    new_header.close()
 
     # Cleanup
     os.remove('./temp.csv')
 
     # noinspection PyRedundantParentheses
-    return (nf, new_header)
+    return (nf, new_header_line)
 
 
 # Effects: takes the left merge of column headers and then reindexes both dataframes based on that.
