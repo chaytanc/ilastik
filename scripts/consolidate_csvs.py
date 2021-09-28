@@ -248,7 +248,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
 # Returns: reordered file and reordered header as a tuple
 def _fix_headers(file, current_header_line):
     # read file in to pandas df
-    csv = pd.read_csv(file)
+    csv_df = pd.read_csv(file)
     # read header into pandas df
     temp = _line_to_csv(current_header_line)
     header_df = pd.read_csv(temp)
@@ -257,7 +257,12 @@ def _fix_headers(file, current_header_line):
     # print("")
 
     # Compare header differences, take the left join of the header_df and csv headers, reindex dfs accordingly
-    new_header, new_csv = _reindex_df_headers(header_df, csv)
+    try:
+        new_header, new_csv = _reindex_df_headers(header_df, csv_df)
+    except AssertionError as e:
+        print("Assertion error with files", file.name, new_header.name, ":")
+        print(e)
+        assert(False)
 
     # Write fixed header df to csv
     new_csv.to_csv(file.name, index=False)
