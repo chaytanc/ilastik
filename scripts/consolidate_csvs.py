@@ -260,7 +260,7 @@ def _fix_headers(file, current_header_line):
     try:
         new_header, new_csv = _reindex_df_headers(header_df, csv_df)
     except AssertionError as e:
-        print("Assertion error with files", file.name, current_header_line.name, ":")
+        print("Assertion error with files", file.name, current_header_line, ":")
         print(e)
         assert(False)
 
