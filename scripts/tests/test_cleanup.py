@@ -28,8 +28,8 @@ class TestFormatData(unittest.TestCase):
     # Check that cleanup.py recursively removes all csv and tifs that aren't the output and
     # are underneath the given output directory
     # Inputs: (assumes that /out/ dir has segmentation already)
-        # expected_out.csv
-            # 210616_1%_DMSO_day_0_b7_table.csv
+        # actual_out.csv
+            # 210616_DMSO_1%_b7_table.csv
             # 210616_1%_DMSO_day_0_c7_table.csv
             # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:

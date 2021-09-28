@@ -24,9 +24,11 @@ class TestFormatData(unittest.TestCase):
         #self.outputCSV = self.outputDir + "/out.csv"
         # Uses hardcoded expected consolidated csv instead of relying on consoldiate_csvs to work
         self.outputCSV = "./data/expected_out.csv"
+
         self.output_standardCSV = "./data/mock_standard_out.csv"
         self.output_multi_standardCSV = "./data/mock_multi_standard_out.csv"
-        self.output_standard_idCSV = "./data/mock_standard_id_out.csv"
+        self.output_standard_id_CSV = "./data/mock_standard_id_out.csv"
+        self.output_standard_multi_days_CSV = "./data/mock_standard_multi_days_out.csv"
 
         # where to put the actual output from running this test which we will compare with expected
         # NOTE: this gets deleted later
@@ -40,6 +42,7 @@ class TestFormatData(unittest.TestCase):
         # Includes multiple days and expected fold changes
         self.expected_multi_standard = "./data/expected_multi_standard_formatted.csv"
         self.expected_standard_id = "./data/expected_standard_id_formatted.csv"
+        self.expected_standard_multi_days = "./data/expected_standard_multi_days_formatted.csv"
 
         # Delete existing output before creating new
         if os.path.exists(self.output_path):
@@ -53,12 +56,12 @@ class TestFormatData(unittest.TestCase):
 
     # Check that for a given consolidated csv of data, we get the expected xlsx file back
     # Inputs: (assumes that /out dir has segmentation already)
-        # expected_out.csv
-            # 210616_1%_DMSO_day_0_b7_table.csv
+        # actual_out.csv
+            # 210616_DMSO_1%_b7_table.csv
             # 210616_1%_DMSO_day_0_c7_table.csv
             # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:
-        # ./expected_out.csv (not sure if order of processing is same, but went alphabetical)
+        # ./actual_out.csv (not sure if order of processing is same, but went alphabetical)
     def test_ramila_format(self):
         fd.main(self.outputCSV, self.output_path, ramila_data=True)
         print("Actual: \n")
@@ -73,7 +76,7 @@ class TestFormatData(unittest.TestCase):
     # FORMAT:
     # "day" {day number}/{date}_{treatment}_{concentration}_{id}_{optional_id}"_table.csv"
     # Inputs: (assumes that /out dir has segmentation already)
-    # expected_out.csv
+    # actual_out.csv
     # day_0/210616_ROCK_3uM_b7.csv
     # day_0/210616_DMSO_1%_c7_01_table.csv
     # day_0/210616_ROCK_100_d7_table.csv
@@ -116,8 +119,9 @@ class TestFormatData(unittest.TestCase):
         self.assertTrue(same_cols)
 
 
+    # Tests the standardized naming convention with different concentrations, but multiple ids of 01 for example
     def test_standard_id_format(self):
-        fd.main(self.output_standard_idCSV, self.output_path, False)
+        fd.main(self.output_standard_id_CSV, self.output_path, False)
         # Print output comparison
         print("Actual: \n")
         os.system("cat " + self.output_path)
@@ -125,6 +129,20 @@ class TestFormatData(unittest.TestCase):
         os.system("cat " + self.expected_standard_id)
         # Comparison should fail because failed_expected_standard has scrambled output
         same_cols = self.compare_csv_cols(self.output_path, self.expected_standard_id)
+        self.assertTrue(same_cols)
+
+
+    # Tests the standardized naming convention with more than two day folders to make sure fold change
+    # calculation doesn't cut out the middle
+    def test_standard_multi_days(self):
+        fd.main(self.output_standard_multi_days_CSV, self.output_path, False)
+        # Print output comparison
+        print("Actual: \n")
+        os.system("cat " + self.output_path)
+        print("Expected: \n")
+        os.system("cat " + self.expected_standard_multi_days)
+        # Comparison should fail because failed_expected_standard has scrambled output
+        same_cols = self.compare_csv_cols(self.output_path, self.expected_standard_multi_days)
         self.assertTrue(same_cols)
 
 

@@ -22,21 +22,28 @@ class TestConsolidateCsvs(unittest.TestCase):
         os.system(call)
         # /some_dir/test_user/out/testDir/
         self.outputDir = workingdir + "/out/" + projectname
+        self.outputMultiDir = workingdir + "/out/testMulti"
         self.outputCSVPath = self.outputDir + "/out.csv"
+        self.outputMultiCSVPath = self.outputMultiDir + "/actual_out.csv"
         self.expected = "./data/expected_out.csv"
+        self.expectedMulti = "./data/expected_multi_out.csv"
         # Delete existing output before creating new
         if os.path.exists(self.outputCSVPath):
             os.remove(self.outputCSVPath)
+        # Delete existing output before creating new
+        if os.path.exists(self.outputMultiCSVPath):
+            os.remove(self.outputMultiCSVPath)
+
 
 
     # Check that for a given output directory with a known amount of csvs, consoldiate gets all the
     # desired output (all measurements and one header)
     # Inputs: (assumes that /out dir has segmentation already)
-        # 210616_1%_DMSO_day_0_b7_table.csv
+        # 210616_DMSO_1%_b7_table.csv
         # 210616_1%_DMSO_day_0_c7_table.csv
         # 210616_1%_DMSO_day_0_d7_table.csv
     # Expected Output:
-        # ./expected_out.csv (not sure if order of processing is same, but went alphabetical)
+        # ./actual_out.csv (not sure if order of processing is same, but went alphabetical)
     def test_output(self):
         cc.main(self.outputDir, self.outputCSVPath)
 
@@ -49,6 +56,25 @@ class TestConsolidateCsvs(unittest.TestCase):
         os.system("cat " + self.outputCSVPath)
         print("Expected: \n")
         os.system("cat " + self.expected)
+        print("end \n")
+        self.assertTrue(same_cols)
+
+    # Inputs: (assumes that /out dir has segmentation already)
+        # 210616_DMSO_1%_b7_table.csv
+        # 210616_1%_DMSO_day_0_c7_table.csv
+        # 210616_1%_DMSO_day_0_d7_table.csv
+    # Expected Output:
+    # .../out/testMulti/actual_out.csv (not sure if order of processing is same, but went alphabetical)
+    def test_multi_output(self):
+        cc.main(self.outputMultiDir, self.outputMultiCSVPath)
+
+        # Sorts the rows because I'm not sure what order the rows should be in
+        self.sort_files(self.outputMultiCSVPath, self.expectedMulti)
+        same_cols = self.compare_csv_cols(self.outputMultiCSVPath, self.expectedMulti)
+        print("Actual: \n")
+        os.system("cat " + self.outputMultiCSVPath)
+        print("Expected: \n")
+        os.system("cat " + self.expectedMulti)
         print("end \n")
         self.assertTrue(same_cols)
 
@@ -89,6 +115,7 @@ class TestConsolidateCsvs(unittest.TestCase):
         return same_cols
 
 
+    # NOTE: modifies files passed in with the sorted lines version
     def sort_files(self, *files):
         for file in files:
             with open(file, "r") as f:
@@ -96,12 +123,16 @@ class TestConsolidateCsvs(unittest.TestCase):
                 new_lines = sorted(lines, reverse=True)
             f.close()
             with open(file, "w") as f:
+                f.seek(0)
+                # f.truncate()
                 # Overwrites
                 for i in range(len(new_lines)):
                     f.write(new_lines[i])
-                if len(lines) > len(new_lines):
-                    for i in range(len(new_lines), len(lines)):
-                        f.write(lines[i])
+
+                #XXX why is this necessary?? why wouldn't lines always be the same length as new lines
+                # if len(lines) > len(new_lines):
+                #     for i in range(len(new_lines), len(lines)):
+                #         f.write(lines[i])
 
 
 if __name__ == '__main__':

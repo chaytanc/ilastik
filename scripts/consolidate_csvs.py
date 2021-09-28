@@ -347,12 +347,6 @@ def main(csv_dir, out_path):
     csvs = get_csvs_recursive(csv_dir)
     consolidate_csvs_recursive(csvs, out_path)
 
-    # Non recursive main:
-    # rename_files(csv_dir)
-    # csvs = get_csvs(csv_dir)
-    # day = get_day(csv_dir)
-    # consolidate_csvs(csvs, day)
-
 
 if __name__ == "__main__":
     # print("args: ", str(sys.argv))
