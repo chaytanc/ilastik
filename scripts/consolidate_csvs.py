@@ -219,6 +219,9 @@ def consolidate_csvs_recursive(csv_files, out_path):
         with open(new_csv_path, "r+") as f:
             # new_csv unused because it directly modifies file we're reading instead of making a new one
             #XXX working here beceause _fix_headers doesn't have permission on the Hyak
+            # If temp already existed from partially finished process before, remove it
+            if os.path.exists("./temp.csv"):
+                os.remove("./temp.csv")
             new_csv, header = _fix_headers(f, header)
             # skip headers
             new_csv.readline()
