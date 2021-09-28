@@ -238,6 +238,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
     fout.close()  # closes output file
 
 
+# Whatever the first header contained is the maximum information we can use for the headers going forward
 # Precondition: While the header columns may differ, the file must have at least the columns that
 # current_header_line has
 # Returns: reordered file and reordered header as a tuple
@@ -260,13 +261,13 @@ def _fix_headers(file, current_header_line):
     nf = open(file.name, "r+")
 
     # Get new_header as a string
-    # new_header = new_header.to_string(header=True, )
-    new_header.to_csv('temp.csv', index=False)
-    with open('temp.csv', 'r') as new_header:
+    new_header.to_csv('./temp.csv', index=False)
+    # Write to new_header the rearranged header we stored in temp.csv
+    with open('./temp.csv', 'r') as new_header:
         new_header = new_header.readline()
 
     # Cleanup
-    os.remove('temp.csv')
+    os.remove('./temp.csv')
 
     # noinspection PyRedundantParentheses
     return (nf, new_header)
@@ -294,10 +295,10 @@ def _reindex_df_headers(old_header_df, new_header_df):
     return (old_header_df, new_header_df)
 
 def _line_to_csv(line):
-    with open("temp.csv", "w") as f:
+    with open("./temp.csv", "w") as f:
         f.write(line)
     f.close()
-    return "temp.csv"
+    return "./temp.csv"
 
 
 # Modifies fout by adding the header and appending the filename to the
