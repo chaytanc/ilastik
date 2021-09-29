@@ -11,7 +11,7 @@
 #XXX todo fix noclean / test
 #   -n: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
-#       excel analysis from object detection. If you set --noclean, make sure to clean up Hyak manually so it does
+#       excel analysis from object detection. If you set -n, make sure to clean up Hyak manually so it does
 #       not run out of space.
 #   -t: a flag that determines whether to copy input files over to the Hyak. Saves time debugging when you
 #       have already transferred before mostly.
@@ -129,11 +129,10 @@ say "Hyak analysis is done" || say "There was an error"
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
 
 # ssh to Hyak, run cleanup script
-echo "Cleaning up Hyak files..."
-
-# If noclean is null, clean up the Hyak
+# If noclean is null, clean up the Hyak (otherwise do nothing / complete)
 if [ -z "${noclean}" ]
 then
+    echo "Cleaning up Hyak files..."
     ssh "${uwid}@klone.hyak.uw.edu" "python3 bootstrap/cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 fi
 say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"

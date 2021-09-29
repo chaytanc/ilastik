@@ -42,20 +42,11 @@ die () {
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 3 ] || die "3 arguments required, $# provided, remote_hyak_start.sh"
 
-#noclean=false
-#while getopts :n: flag
-#do
-#    case "${flag}" in
-#        n) noclean=true; shift;;
-#        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
-#    esac
-#done
 rootdir=$1
 hyakDir=$2
 uwid=$3
 
 conda activate /gscratch/freedmanlab
-#TODO change this to be rootname not rootdir
 ./bootstrap/check_file_structure.sh $rootdir $hyakDir $uwid
 
 # Go to working directory and check file structure invariant
@@ -64,14 +55,5 @@ cd $hyakDir || die "Error: Couldn't find $hyakDir"
 cd ${hyakDir}/scripts/
 echo "Working dir: $(pwd)"
 echo "rootdir dir: ${rootdir}"
-#if [ $noclean == true ]
-#then
-## sbatch runs computation on computation node -- is currently way to slow to use
-## srun python3 run_batches.py --noclean "${rootdir}"
-#    python3 run_batches.py --noclean "$rootdir"
-#else
-#    python3 run_batches.py "$rootdir"
-##    srun python3 run_batches.py "${rootdir}"
-#fi
+
 python3 run_batches.py "$rootdir"
-#    srun python3 run_batches.py "${rootdir}"
