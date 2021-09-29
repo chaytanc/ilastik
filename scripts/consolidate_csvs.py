@@ -219,15 +219,19 @@ def consolidate_csvs_recursive(csv_files, out_path):
         with open(new_csv_path, "r+") as f:
             # new_csv unused because it directly modifies file we're reading instead of making a new one
             #XXX working here beceause _fix_headers doesn't have permission on the Hyak
-            # If temp already existed from partially finished process before, remove it
+            # Setup: If temp or skipped_files already existed from partially finished process before, remove it
+            if os.path.exists("./temp.csv"):
+                os.remove("./temp.csv")
             if os.path.exists("./temp.csv"):
                 os.remove("./temp.csv")
 
             try:
                 new_csv, header = _fix_headers(f, header)
             except AssertionError:
-                #XXX add to a list of files that did not process
+                #XXX write a test that includes bad headers and tests breaking these assertions
                 print("Skipping analyzing file", f.name, "due to bad header")
+                with open("./skipped_files.txt", "a") as skipped:
+                    skipped.write(f.name)
                 continue
             # skip headers
             new_csv.readline()
