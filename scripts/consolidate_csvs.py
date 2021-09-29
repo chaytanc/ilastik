@@ -231,7 +231,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
                 # Write skipped_files to the same spot as the outputdir specified
                 with open(os.path.join(os.path.split(out_path)[0], "/skipped_files.txt"), "a") as skipped:
                     skipped.write(f.name)
-                skipped.close()
+                    skipped.close()
                 continue
             # skip headers
             new_csv.readline()
