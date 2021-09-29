@@ -8,7 +8,6 @@
 # output directory (assumes the file structure is enforced locally).
 #
 # INPUT / PARAMETERS:
-#XXX todo fix noclean / test
 #   -n: a flag that determines whether or not the script will automatically clean up (remove) the files
 #       intermediate files like .tif probability maps from the Hyak. By default, the only file remaining is the
 #       excel analysis from object detection. If you set -n, make sure to clean up Hyak manually so it does
