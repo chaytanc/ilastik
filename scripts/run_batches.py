@@ -8,9 +8,6 @@ This script will run Ilastik object detection using auto_ilastik.sh on all sub d
 USAGE: python3 run_batches.py /gscratch/freedmanlab/ilastik/my_images
     ARGS: 
         imagesdir: path (on Hyak) to the dir containing raw images in "day X" folders
-    FLAGS: 
-        --noclean will run auto_ilastik.sh without deleting the intermediate files made.
-        Ex: python3 run_batches.py --noclean "../in/my_cyst_images/"
         
 EFFECTS:
     Pixel segmentation and object detection run by auto_ilastik.sh will be run on all "day X" folders in the
@@ -29,7 +26,6 @@ ARGS = None
 # Gets the command line arguments and returns them
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--noclean", action="store_true", help="does not automatically remove excess files from Ilastik output")
     parser.add_argument("imagesdir", help="path to the directory containing 'day X' folders of raw images")
     return parser.parse_args()
 
@@ -64,10 +60,7 @@ def get_subdirs(imagesdir):
 def run_batches(subdirs):
     exit_val = 0
     for subdir in subdirs:
-        if ARGS.noclean:
-            call = "./auto_ilastik.sh '%s'" % str(subdir)
-        else:
-            call = "./auto_ilastik.sh '%s' '%s'" % ("-n", str(subdir))
+        call = "./auto_ilastik.sh '%s'" % str(subdir)
         print("\n CALLING ", call, "\n")
         temp_val = os.system(call)
         if temp_val != 0:

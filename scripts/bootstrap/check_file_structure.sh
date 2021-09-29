@@ -25,14 +25,14 @@ die () {
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 2 ] || die "2 arguments required, $# provided, check_file_structure.sh"
 
-noclean=false
-while getopts :n: flag
-do
-    case "${flag}" in
-        n) noclean=true; shift;;
-        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
-    esac
-done
+#noclean=false
+#while getopts :n: flag
+#do
+#    case "${flag}" in
+#        n) noclean=true; shift;;
+#        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
+#    esac
+#done
 rootname="$1"
 rootname=$(basename $rootname)
 hyakDir=$2

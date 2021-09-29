@@ -31,10 +31,11 @@ exit 1
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 1 ] || die "1 arguments required, $# provided, auto_ilastik.sh"
 
-while getopts :n:t: flag
+#while getopts :n:t: flag
+while getopts :t: flag
 do
 case "${flag}" in
-n) noclean=true; shift;;
+#n) noclean=true; shift;;
 t) test=true; shift;;
 *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
 esac

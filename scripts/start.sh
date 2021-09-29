@@ -110,11 +110,12 @@ localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 # Check local directory invariant before proceeding
 ./bootstrap/check_file_structure.sh $noSpacesName "../" $uwid
 
-#XXX sbatch currently works but is very slow and hides stdout so not using. Also
+#NOTE: sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
 #ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 
+# Checks if phone param is null
 if [ ! -z "${phone}" ]
 then
     curl -X POST https://textbelt.com/text \
@@ -129,5 +130,10 @@ scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "cou
 
 # ssh to Hyak, run cleanup script
 echo "Cleaning up Hyak files..."
-ssh "${uwid}@klone.hyak.uw.edu" "python3 bootstrap/cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+
+# If noclean is null, clean up the Hyak
+if [ -z "${noclean}" ]
+then
+    ssh "${uwid}@klone.hyak.uw.edu" "python3 bootstrap/cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
+fi
 say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"

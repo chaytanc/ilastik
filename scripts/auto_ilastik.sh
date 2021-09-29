@@ -3,6 +3,8 @@
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:
+#     -t: Use to call a different path to ilastik headless application for testing this script locally rather than
+#         on the Hyak. Will have to replace code in this script with your own local ilastik path for this to work.
 #     imagesDir: This is the path to the folder of input images which is titled "day X".
 #       It is relative to where this script is being run.
 #       It should contain only raw images that you intend to process with ilastik.
@@ -31,10 +33,9 @@ die () {
 # Checks we have the proper number of arguments passed in
 [ "$#" -ge 1 ] || die "1 arguments required, $# provided, auto_ilastik.sh"
 
-while getopts :n:t: flag
+while getopts t: flag
 do
     case "${flag}" in
-        n) noclean=true; shift;;
         t) test=true; shift;;
         *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
     esac
