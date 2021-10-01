@@ -38,7 +38,7 @@ replace_auto_models() {
 #    sed "0,/--project.*/{s/--project.*/--project='..\/models\/test_pix.ilp'\\\ //}" ./data/mock_auto_ilastik.sh > temp.txt
 #    sed "s/--project.*/--project='..\/models\/test.ilp'\\\ /" auto_ilastik.sh  > temp.txt
 #    sed "s/--project.*/--project='..\/models\/test.ilp'\\\ /" ./tests/data/mock_auto_ilastik.sh  > temp.txt
-    python3 use_new_models.py $localauto $pixel_model $object_model || py use_new_models.py $localauto $pixel_model $object_model
+    python3 use_new_models.py $localauto $pixel_model $object_model || python use_new_models.py $localauto $pixel_model $object_model || py use_new_models.py $localauto $pixel_model $object_model
     # For windows users; replaces Windows CRLF with LF since we may be editing on windows
     dos2unix $localauto
     # save file / scp over to hyak
