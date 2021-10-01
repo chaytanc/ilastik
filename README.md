@@ -40,6 +40,7 @@ Standard File Naming Convention: https://docs.google.com/document/d/1Hrn7xmbiiVG
 Transferring Models to the Hyak: https://docs.google.com/document/d/1UPf58aQaBBOidGMZmWsRPX1V8In49qSf1lQ-AkhDK5I/edit?usp=sharing  
 Changing Model Files Used on the Hyak: https://docs.google.com/document/d/1DKRIbaSFAym9NO0QGRwfrTHYavDsclfeZI13IRqOVuE/edit?usp=sharing  
 Common Debugging Issues: https://docs.google.com/document/d/1XEcYQI6UjKCwsu2z3ughn3Je8sk3T-i6Vc76T3NUm-U/edit?usp=sharing  
+Documentation Presentation: https://docs.google.com/presentation/d/1MLbJ1rVoqF8XGeI6eyVuRkZv-GB_JDC7/edit#slide=id.ge71b74fc25_0_6  
 
 
 
