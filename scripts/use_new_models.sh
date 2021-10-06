@@ -25,6 +25,18 @@
 # is on the Hyak, the paths to the model files will break locally
 # (but will work on the Hyak)
 
+function fixup_cn_subject() {
+    local result="${1}"
+    case $OSTYPE in
+        msys|win32) result="//XX=x${result}"
+        echo "using path ${result}"
+    esac
+    echo "$result"
+}
+
+# Usage example
+MY_SUBJECT=$(fixup_cn_subject "/C=GB/CN=foo")
+
 # Calls python to replace --project "previous_pixel.ilp" lines to use --project "current_pixel.ilp" and
 # --project "previous_object.ilp" then scps replaced file to the scripts directory of the hyak
 replace_auto_models() {
@@ -32,12 +44,9 @@ replace_auto_models() {
       localauto=$2
       uwid=$3
       transfer_path="${uwid}@klone.hyak.uw.edu:${hyakdir}/scripts/"
-      pixel_model=$4
-      object_model=$5
+      pixel_model=$(fixup_cn_subject $4)
+      object_model=$(fixup_cn_subject $5)
 
-#    sed "0,/--project.*/{s/--project.*/--project='..\/models\/test_pix.ilp'\\\ //}" ./data/mock_auto_ilastik.sh > temp.txt
-#    sed "s/--project.*/--project='..\/models\/test.ilp'\\\ /" auto_ilastik.sh  > temp.txt
-#    sed "s/--project.*/--project='..\/models\/test.ilp'\\\ /" ./tests/data/mock_auto_ilastik.sh  > temp.txt
     python3 use_new_models.py $localauto $pixel_model $object_model || python use_new_models.py $localauto $pixel_model $object_model || py use_new_models.py $localauto $pixel_model $object_model
     # For windows users; replaces Windows CRLF with LF since we may be editing on windows
     dos2unix $localauto

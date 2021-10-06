@@ -23,9 +23,9 @@
 
 # A func to kill the script and direct errors to stderr
 die () {
-    # Print the given error message to stderr and then exit
-    echo >&2 "$@"
-    exit 1
+# Print the given error message to stderr and then exit
+echo >&2 "$@"
+exit 1
 }
 
 # Parse arguments and options (flags)
@@ -35,10 +35,10 @@ die () {
 
 while getopts t: flag
 do
-    case "${flag}" in
-        t) test=true; shift;;
-        *) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
-    esac
+case "${flag}" in
+t) test=true; shift;;
+*) echo "Unknown parameter passed: $1"; die "Unknown param" ;;
+esac
 done
 
 imagesDir=$1
@@ -66,10 +66,10 @@ SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 for image in $images
 do
-  newImage=$(echo $image | sed -e "s/ /_/g")
-  cp "$imagesDir/$image" "$imagesDir/$newImage"
-  echo "New file name: $newImage"
-  noSpacesImages="$noSpacesImages $imagesDir/$newImage "
+newImage=$(echo $image | sed -e "s/ /_/g")
+cp "$imagesDir/$image" "$imagesDir/$newImage"
+echo "New file name: $newImage"
+noSpacesImages="$noSpacesImages $imagesDir/$newImage "
 done
 IFS=$SAVEIFS
 echo "Done renaming raw data to $noSpacesImages"
@@ -83,19 +83,19 @@ echo "Done renaming raw data to $noSpacesImages"
 if [[ $test == "" ]]
 then
 #    ilastikStart="/gscratch/scrubbed/freedman/ilastik/ilastik-1.4.0b15-Linux/run_ilastik.sh "
-    ilastikStart="/gscratch/freedmanlab/ilastik-1.4.0b15-Linux/run_ilastik.sh "
+ilastikStart="/gscratch/freedmanlab/ilastik-1.4.0b15-Linux/run_ilastik.sh "
 else
-    #NOTE: for debugging off the Hyak, insert your local path to ilastik here and use the -t flag
-    ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh"
+#NOTE: for debugging off the Hyak, insert your local path to ilastik here and use the -t flag
+ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-release/run_ilastik.sh"
 fi
 $ilastikStart \
-   	--headless \
-    --project="../models/cyst_pixel_seg.ilp" \
-    --table_filename=$outputDir/exported_object_features.csv \
-    --output_filename_format="$outputDir/{nickname}_seg.tif" \
-    --output_format="tif" \
-    --export_source="probabilities" \
-    --raw_data $noSpacesImages
+--headless \
+--project='../models/cyst_pixel_seg.ilp' \
+--table_filename=$outputDir/exported_object_features.csv \
+--output_filename_format="$outputDir/{nickname}_seg.tif" \
+--output_format="tif" \
+--export_source="probabilities" \
+--raw_data $noSpacesImages
 
 # OBJECT DETECTION
 #NOTE: Put your model name under project=".../models/your_model.ilp"
@@ -109,23 +109,23 @@ IFS=$(echo -en "\n\b")
 outputImages=$(ls $outputDir) || die "can't find outputDir $outputDir"
 for file in $outputImages
 do
-  # Check that it is a segmentation image / not some prior object detection
-  # (by checking that it contains the substring "seg" which we append to the file name in segmentation)
-  if [[ "${file}" =~ .*"seg".* ]]
-  then
-      newImage=$(echo $file | sed -e "s/ /_/g")
-      cp "$outputDir/$file" "$outputDir/$newImage"
-      echo "New segmentation file name: $newImage"
-      # Appends the renamed image to the list of images
-      noSpacesSegImages="$noSpacesSegImages $outputDir/$newImage "
-  fi
+# Check that it is a segmentation image / not some prior object detection
+# (by checking that it contains the substring "seg" which we append to the file name in segmentation)
+if [[ "${file}" =~ .*"seg".* ]]
+then
+newImage=$(echo $file | sed -e "s/ /_/g")
+cp "$outputDir/$file" "$outputDir/$newImage"
+echo "New segmentation file name: $newImage"
+# Appends the renamed image to the list of images
+noSpacesSegImages="$noSpacesSegImages $outputDir/$newImage "
+fi
 done
 IFS=$SAVEIFS
 
 # Check that the files were found where we expected them and we were able to parse them
 if [[ $noSpacesSegImages == "" ]]
 then
-  die "Cannot find output segmentation images in auto_ilastik.sh"
+die "Cannot find output segmentation images in auto_ilastik.sh"
 fi
 echo "Done renaming segmentation images"
 
@@ -134,21 +134,21 @@ echo "" # line break
 echo "No Spaces Seg Images for object detection input ${noSpacesSegImages}"
 
 # CAUTION: when constructing these commands, make sure there is no equal sign after the raw_data or prediction_maps
-    # arguments -- if there is that means it expects only one string argument instead of many images!
+# arguments -- if there is that means it expects only one string argument instead of many images!
 # ** Replace project="..." **
 $ilastikStart \
-  --headless \
-	--project="../models/cyst_object_det3.ilp" \
-	--output_filename_format="$outputDir/{nickname}_obj.tif" \
-  --output_format="tif" \
-	--table_filename="$outputDir/{nickname}.csv" \
-  --raw_data $noSpacesImages \
-	--prediction_maps $noSpacesSegImages
+--headless \
+--project='../models/cyst_object_det3.ilp' \
+--output_filename_format="$outputDir/{nickname}_obj.tif" \
+--output_format="tif" \
+--table_filename="$outputDir/{nickname}.csv" \
+--raw_data $noSpacesImages \
+--prediction_maps $noSpacesSegImages
 
 # Check error status of run
-if [ $(echo $?) == "0" ] 
+if [ $(echo $?) == "0" ]
 then
-	echo "auto_ilastik.sh ran on the images successfully!"
+echo "auto_ilastik.sh ran on the images successfully!"
 else
-	echo "auto_ilastik.sh failure! check the log files in home directory (~/ilastik_log.txt)??"
+echo "auto_ilastik.sh failure! check the log files in home directory (~/ilastik_log.txt)??"
 fi

@@ -90,7 +90,7 @@ ilastikStart="$HOME/Applications/ilastik-1.4.0b15-OSX.app/Contents/ilastik-relea
 fi
 $ilastikStart \
 --headless \
---project='../../models/cyst_pixel_seg.ilp' \
+--project='../models/cyst_pixel_seg.ilp' \
 --table_filename=$outputDir/exported_object_features.csv \
 --output_filename_format="$outputDir/{nickname}_seg.tif" \
 --output_format="tif" \
@@ -138,7 +138,7 @@ echo "No Spaces Seg Images for object detection input ${noSpacesSegImages}"
 # ** Replace project="..." **
 $ilastikStart \
 --headless \
---project='../../models/cyst_object_det3.ilp' \
+--project='../models/cyst_object_det3.ilp' \
 --output_filename_format="$outputDir/{nickname}_obj.tif" \
 --output_format="tif" \
 --table_filename="$outputDir/{nickname}.csv" \
