@@ -12,7 +12,7 @@
 #     files*: local path(s) to files you want to transfer. If you have multiple files, use the form where the whole
 #       files argument is surrounded by quotes, but each file within the quotes is separated by a space.
 # USAGE:
-#  Ex: ./transfer_models.sh ~/ chaytan "../../models/cyst_pixel_seg.ilp ../../models/cyst_object_det3.ilp"
+#  Ex: ./transfer_models.sh ~/ chaytan "../models/cyst_pixel_seg.ilp ../models/cyst_object_det3.ilp"
 #     This example copies the two files cyst_pixel_seg.ilp and cyst_object_det3.ilp to my home directory at ~/
 #     on the Hyak.
 
