@@ -22,6 +22,7 @@ def parse_args():
     parser.add_argument("file_path")
     parser.add_argument("pixel_model")
     parser.add_argument("obj_model")
+    print("args: ", parser.parse_args())
     return parser.parse_args()
 
 
