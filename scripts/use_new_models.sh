@@ -28,6 +28,7 @@
 function fixup_cn_subject() {
     local result="${1}"
     case $OSTYPE in
+        #XXX doesn't work with relative path!!
         msys|win32) result="//${result}"
         echo "using path ${result}"
     esac
@@ -42,10 +43,14 @@ MY_SUBJECT=$(fixup_cn_subject "/C=GB/CN=foo")
 replace_auto_models() {
       hyakdir=$1
       localauto=$2
+      echo "localauto: ${localauto}"
       uwid=$3
       transfer_path="${uwid}@klone.hyak.uw.edu:${hyakdir}/scripts/"
       pixel_model=$(fixup_cn_subject $4)
+      echo "pixel model: ${pixel_model}"
       object_model=$(fixup_cn_subject $5)
+      echo "object_model: ${object_model}"
+
 
     python3 use_new_models.py $localauto $pixel_model $object_model || python use_new_models.py $localauto $pixel_model $object_model || py use_new_models.py $localauto $pixel_model $object_model
     # For windows users; replaces Windows CRLF with LF since we may be editing on windows
