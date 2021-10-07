@@ -52,7 +52,7 @@ replace_auto_models() {
       echo "object_model: ${object_model}"
 
 
-    python3 use_new_models.py $localauto $pixel_model $object_model || python use_new_models.py $localauto $pixel_model $object_model || py use_new_models.py $localauto $pixel_model $object_model
+    python3 use_new_models.py "$localauto" "$pixel_model" "$object_model" || python use_new_models.py "$localauto" "$pixel_model" "$object_model" || py use_new_models.py "$localauto" "$pixel_model" "$object_model"
     # For windows users; replaces Windows CRLF with LF since we may be editing on windows
     dos2unix $localauto
     # save file / scp over to hyak
