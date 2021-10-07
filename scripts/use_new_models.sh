@@ -30,7 +30,7 @@ function fixup_cn_subject() {
     case $OSTYPE in
         #XXX doesn't work with relative path!!
         msys|win32) result="/${result}"
-        echo "using path ${result}"
+#        echo "using path ${result}"
     esac
     echo "$result"
 }
