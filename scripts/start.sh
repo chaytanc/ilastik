@@ -56,10 +56,13 @@ phone_text() {
 # Checks if the slurm job had an error file
 check_logs() {
     outdir="$1"
-    errfile=$(ls $outdir | grep .*err)
+    errfile=$(ls $outdir | grep .*err) || errfile="none"
     errpath="${outdir}/${errfile}"
-    echo "ERROR in file $errpath"
-    cat errpath
+    if [ $errfile != "none" ]
+    then
+        echo "ERROR in file $errpath"
+        cat $errpath
+    fi
 }
 
 # Go to the directory from which this script is being run so paths relative to it work

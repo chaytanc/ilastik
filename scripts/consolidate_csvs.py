@@ -230,7 +230,7 @@ def consolidate_csvs_recursive(csv_files, out_path):
                 print("Skipping analyzing file", f.name, "due to bad header")
                 # Write skipped_files to the same spot as the outputdir specified
                 with open(os.path.join(os.path.split(out_path)[0], "./skipped_files.txt"), "a") as skipped:
-                    skipped.write(f.name)
+                    skipped.write(f.name + '\n')
                 skipped.close()
                 continue
             # skip headers

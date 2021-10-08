@@ -27,7 +27,7 @@
 # This script has all the commands that are needed to bootstrap the object detection and analysis on the Hyak.
 # It should be piped to an ssh command such that these commands are run on the Hyak.
 # PARAMETERS:
-#     rootdir: path (on Hyak) to the dir containing raw images in "day X" folders
+#     rootdir: path (on Hyak) to the output dir containing raw images in "day X" folders
 #     hyakDir: The directory to the freedman lab files under which your user files are located
 #         Ex: hyakDir = /gscratch/freedman/ilastik/, if file invariant is followed,
 #             this directory will also contain /gscratch/freedman/ilastik/user
@@ -39,6 +39,25 @@ die () {
     exit 1
 }
 
+#XXX working here to remove previous slurm output files before running
+remove_prev_logs() {
+    outdir="$1"
+    errfile=$(ls $outdir | grep .*err) || errfile="none"
+    outfile=$(ls $outdir | grep slurm.out) || outfile="none"
+    if [ errfile != "none" ]
+    then
+        errpath="${outdir}/${errfile}"
+        echo "Removing ${errpath}"
+        rm $errpath
+    fi
+    if [ outfile != "none" ]
+    then
+        outpath="${outdir}/${outfile}"
+        echo "Removing ${outpath}"
+        rm $outpath
+    fi
+}
+
 # Parse arguments and options (flags)
 
 # Checks we have the proper number of arguments passed in
@@ -48,7 +67,8 @@ rootdir=$1
 hyakDir=$2
 uwid=$3
 
-conda activate /gscratch/freedmanlab
+#conda activate /gscratch/freedmanlab
+remove_prev_logs $rootdir
 ./bootstrap/check_file_structure.sh $rootdir $hyakDir $uwid
 
 # Go to working directory and check file structure invariant
