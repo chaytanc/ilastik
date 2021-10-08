@@ -1,5 +1,28 @@
 #!/bin/bash
 
+## SBATCH account and partition setup
+##SBATCH --account=iscrm
+#SBATCH --account=freedmanlab
+#SBATCH --partition=compute-hugemem
+
+## working directory for this job:
+#SBATCH --chdir=/gscratch/freedmanlab/ilastik/scripts
+
+## allocation:
+## nodes: # of nodes
+## ntasks-per-node: # cores per node
+## mem: ram
+## time: max running time
+#SBATCH --nodes=1
+#SBATCH --time=24:00:00
+#SBATCH --signal=USR2
+#SBATCH --ntasks=28
+#SBATCH --mem=120G
+
+## email
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=chaytan@uw.edu
+
 # This script takes all images from a given folder and runs a batch of pixel segmentation and
 # object detection headlessly on the Hyak server.
 # PARAMETERS:

@@ -40,6 +40,28 @@ die () {
     exit 1
 }
 
+# Sends a message when the Hyak is done, but only get one free per day...
+phone_text() {
+    phone=$1
+    # Checks if phone param is null
+    if [ ! -z "${phone}" ]
+    then
+        curl -X POST https://textbelt.com/text \
+           --data-urlencode phone="$phone" \
+           --data-urlencode message='The Hyak pipeline has finished running!' \
+           -d key=textbelt
+    fi
+}
+
+# Checks if the slurm job had an error file
+check_logs() {
+    outdir="$1"
+    errfile=$(ls $outdir | grep .*err)
+    errpath="${outdir}/${errfile}"
+    echo "ERROR in file $errpath"
+    cat errpath
+}
+
 # Go to the directory from which this script is being run so paths relative to it work
 MY_PATH="`dirname \"$0\"`"
 cd $MY_PATH || die "Couldn't change dirs to where the script is"
@@ -111,22 +133,18 @@ localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 
 #NOTE: sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
-#ssh "${uwid}@klone.hyak.uw.edu" "sbatch --wait ./remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
-ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+ssh "${uwid}@klone.hyak.uw.edu" "sbatch --output='${localOutDir}/slurm.out' --error='${localOutDir}/slurm.err' \
+--wait ./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
+check_logs ${localOutDir}
+#ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 
-# Checks if phone param is null
-if [ ! -z "${phone}" ]
-then
-    curl -X POST https://textbelt.com/text \
-       --data-urlencode phone="$phone" \
-       --data-urlencode message='The Hyak pipeline has finished running!' \
-       -d key=textbelt
-fi
 say "Hyak analysis is done" || say "There was an error"
 
 # Transfer output files back to local
-scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" || die "could not transfer Hyak output to local computer, start.sh"
+scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" \
+|| die "could not transfer Hyak output to local computer, start.sh"
 
+phone_text $phone
 # ssh to Hyak, run cleanup script
 # If noclean is null, clean up the Hyak (otherwise do nothing / complete)
 if [ -z "${noclean}" ]
@@ -135,3 +153,4 @@ then
     ssh "${uwid}@klone.hyak.uw.edu" "python3 bootstrap/cleanup.py ${hyakOutDir}" || die "couldn't ssh in to Hyak to cleanup files, start.sh"
 fi
 say "The Hyak pipeline run completed!" || say "The Hyak pipeline experienced an error"
+

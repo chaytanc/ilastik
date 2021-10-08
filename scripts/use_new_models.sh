@@ -14,9 +14,10 @@
 #    localauto: the local path of the auto_ilastik.sh file to replace the ilastik models in,
 #       for example, "./auto_ilastik.sh"
 #    uwid: your UW NetID which must have an account on the Hyak
-#    pixel_model: path to the pixel segmentation model on the Hyak relative to the scripts directory,
-#       for example, "../models/cyst_pixel_seg.ilp"
-#    object_model: path to the object detection model on the Hyak relative to the scripts directory
+#    pixel_model: ABSOLUTE path to the pixel segmentation model on the Hyak relative to the scripts directory,
+#       for example, "/gscratch/freedmanlab/ilastik/models/cyst_pixel_seg.ilp"
+#       do not use "../models/cyst_pixel_seg.ilp", which is a relative path
+#    object_model: ABSOLUTE path to the object detection model on the Hyak relative to the scripts directory
 #
 # EFFECTS:
 # Replaces the models called headlessly by Ilastik in the given localauto file with the pixel and object models
@@ -28,9 +29,7 @@
 function fixup_cn_subject() {
     local result="${1}"
     case $OSTYPE in
-        #XXX doesn't work with relative path!!
         msys|win32) result="/${result}"
-#        echo "using path ${result}"
     esac
     echo "$result"
 }

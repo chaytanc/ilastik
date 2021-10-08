@@ -6,6 +6,8 @@
 
 ## working directory for this job:
 #SBATCH --chdir=/gscratch/freedmanlab/ilastik/scripts
+## one way of saving output would be using job name, but I don't want unique log files to build up
+##SBATCH --output="../logs/%x.%j.out"
 
 ## allocation:
 ## nodes: # of nodes
