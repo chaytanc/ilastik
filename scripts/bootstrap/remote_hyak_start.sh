@@ -41,20 +41,27 @@ die () {
 
 #XXX working here to remove previous slurm output files before running
 remove_prev_logs() {
-    outdir="$1"
+    base=$(basename $1)
+    outdir="$1/../../out/$base/"
+    echo $outdir
     errfile=$(ls $outdir | grep .*err) || errfile="none"
+    #XXX is not doing equality properly: Removing ../chaytan/in/ROCK_Test_Raw/none
     outfile=$(ls $outdir | grep slurm.out) || outfile="none"
     if [ errfile != "none" ]
     then
         errpath="${outdir}/${errfile}"
         echo "Removing ${errpath}"
         rm $errpath
+    else
+        echo "No previous slurm error"
     fi
     if [ outfile != "none" ]
     then
         outpath="${outdir}/${outfile}"
         echo "Removing ${outpath}"
         rm $outpath
+    else
+        echo "No previous slurm output"
     fi
 }
 
@@ -68,7 +75,7 @@ hyakDir=$2
 uwid=$3
 
 #conda activate /gscratch/freedmanlab
-remove_prev_logs $rootdir
+#remove_prev_logs $rootdir
 ./bootstrap/check_file_structure.sh $rootdir $hyakDir $uwid
 
 # Go to working directory and check file structure invariant

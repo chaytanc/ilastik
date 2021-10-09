@@ -221,8 +221,8 @@ def consolidate_csvs_recursive(csv_files, out_path):
             # Setup: If temp or skipped_files already existed from partially finished process before, remove it
             if os.path.exists("./temp.csv"):
                 os.remove("./temp.csv")
-            if os.path.exists("./temp.csv"):
-                os.remove("./temp.csv")
+            if os.path.exists("./skipped_files.txt"):
+                os.remove("./skipped_files.txt")
 
             try:
                 new_csv, header = _fix_headers(f, header)

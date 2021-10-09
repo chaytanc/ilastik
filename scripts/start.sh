@@ -136,9 +136,7 @@ localOutDir="${noSpacesDir}/../../out/${noSpacesName}"
 
 #NOTE: sbatch currently works but is very slow and hides stdout so not using. Also
 # it does not fix the obj detection issue
-ssh "${uwid}@klone.hyak.uw.edu" "sbatch --output='${localOutDir}/slurm.out' --error='${localOutDir}/slurm.err' \
---wait ./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
-check_logs ${localOutDir}
+ssh "${uwid}@klone.hyak.uw.edu" "rm ${hyakOutDir}/slurm.out ${hyakOutDir}/slurm.err; sbatch --output='${hyakOutDir}/slurm.out' --error='${hyakOutDir}/slurm.err' --wait ./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak for remote_hyak_start, start.sh"
 #ssh "${uwid}@klone.hyak.uw.edu" "./bootstrap/remote_hyak_start.sh ${noSpacesDir} ${hyakDir} ${uwid}" || die "couldn't ssh in to Hyak, start.sh"
 
 say "Hyak analysis is done" || say "There was an error"
@@ -146,6 +144,9 @@ say "Hyak analysis is done" || say "There was an error"
 # Transfer output files back to local
 scp -r "${uwid}@klone.hyak.uw.edu:/${hyakOutDir}/*" "${localOutDir}" \
 || die "could not transfer Hyak output to local computer, start.sh"
+
+# Check if there was a slurm.err file
+check_logs ${localOutDir}
 
 phone_text $phone
 # ssh to Hyak, run cleanup script

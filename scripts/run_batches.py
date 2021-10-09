@@ -61,9 +61,6 @@ def run_batches(subdirs):
     exit_val = 0
     for subdir in subdirs:
         call = "./auto_ilastik.sh '%s'" % str(subdir)
-        # Queue auto_ilastik.sh for a batch, need to then wait for it to finish before continuing
-        #XXX working here
-        # call = "sbatch auto_ilastik.sh '%s'" % str(subdir)
         print("\n CALLING ", call, "\n")
         temp_val = os.system(call)
         if temp_val != 0:
