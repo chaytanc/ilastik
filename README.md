@@ -21,9 +21,10 @@ preconditions at the top. You may find this useful.
 ## Example File Structure Invariant
 --> In this example, the source folder of the raw images was called testRootDir   
 --> The source folder of raw images **must store images under "day X" folders**  
---> The "chaytan" (replace with your UW NetID), "in" and "out" folders will be automatically created on the Hyak with the combination of the output of the setup_user.sh (one time setup) and start.sh scripts. The "in" folder will automatically contain a copy of the local raw data on the Hyak.
+--> The "chaytan" (replace with your UW NetID), "in" and "out" folders will be automatically created on the Hyak with the combination of the output of the setup_user.sh (one time setup) and start.sh scripts. The "in" folder will automatically contain a copy of the local raw data on the Hyak. It is recommended to place your data in a folder with a name of your choosing underneath the "in" folder, with the correctly managed "day X" folders under that, as seen in the example. Successfully running start.sh with the proper parameters as documented at the top of each file will result in the creation of the "out" folder as structured in the example, with the condensed analysis titled "out.xlsx" or similarly.  
 
-<img width="521" alt="image" src="https://user-images.githubusercontent.com/35582442/129659207-e91befc9-bacc-443b-b5bf-92f1eae1136b.png">
+<img width="481" alt="Screen Shot 2021-12-18 at 4 25 24 PM" src="https://user-images.githubusercontent.com/35582442/146659183-4c93c1ad-f5bb-4c8d-8e69-6989528d3e08.png"><img width="481" alt="Screen Shot 2021-12-18 at 4 28 47 PM" src="https://user-images.githubusercontent.com/35582442/146659216-55fdf12e-1a3e-440a-9e27-828e038bc558.png">
+
 
 ## Video Tutorials
 One-Time Setup: https://youtu.be/rlr7TK4ywJY  
